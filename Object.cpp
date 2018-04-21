@@ -2,6 +2,10 @@
 #include "Texture.h"
 #include "Display.h"
 
+#ifdef _DEBUG
+	#include <assert.h>
+#endif
+
 #pragma region Constructor
 
 Object::Object(double x, double y, std::string texturePath)
@@ -26,11 +30,21 @@ Object::~Object()
 
 void Object::Draw()
 {
+#if _DEBUG
+	assert(this->width);
+	assert(this->height);
+#endif
+
 	Display::QueueTextureForRendering(this->texture, this->x, this->y);
 }
 
 bool Object::TestCollision(Object* otherObject)
 {
+#if _DEBUG
+	assert(this->width);
+	assert(this->height);
+#endif
+
 	const int thisHalfWidth = this->width / 2;
 	const int thisHalfHeight = this->height / 2;
 	const int otherHalfWidth = otherObject->width / 2;
@@ -88,10 +102,6 @@ void Object::SetTexture(std::string texturePath)
 
 	this->texture = new Texture(texturePath);
 	this->texture->Load();
-
-	//TODO: pulling this from texture size is probably not ideal
-	this->width = this->texture->GetWidth();
-	this->height = this->texture->GetHeight();
 }
 
 #pragma endregion

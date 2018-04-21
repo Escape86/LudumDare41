@@ -14,6 +14,8 @@ Player::Player() : Object((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), PLAYER_TEXTUR
 	this->verticalVelocity = 0;
 
 	this->hp = 100;
+	this->width = PLAYER_WIDTH;
+	this->height = PLAYER_HEIGHT;
 
 	//prevent level switching from causing keyups to occur without a corresponding keydown
 	this->keydownPrimed = false;
@@ -29,9 +31,11 @@ Player::~Player()
 
 void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime)
 {
+	float previousFrameTimeInSeconds = (previousFrameTime / 1000.0f);
+
 	//update position
-	this->x += this->horizontalVelocity;
-	this->y += this->verticalVelocity;
+	this->x += (this->horizontalVelocity * previousFrameTimeInSeconds);
+	this->y += (this->verticalVelocity * previousFrameTimeInSeconds);
 
 	//enforce screen bounds
 	int halfWidth = this->width / 2;
