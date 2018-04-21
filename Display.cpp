@@ -133,7 +133,16 @@ void Display::InjectFrame()
 	for (std::vector<QueuedTexture>::iterator it = Display::textureQueue.begin(); it != Display::textureQueue.end(); ++it)
 	{
 		Texture* t = it->texture;
-		t->Draw(it->x, it->y);
+
+		if (it->isSpriteSheet)
+		{
+			SDL_Rect clip = { it->spriteSheetOffsetX, it->spriteSheetOffsetY, TILE_WIDTH, TILE_HEIGHT };
+			t->Draw(it->x, it->y, it->shiftToCenterPoint, &clip);
+		}
+		else
+		{
+			t->Draw(it->x, it->y, it->shiftToCenterPoint);
+		}
 	}
 
 	Display::textureQueue.clear();
@@ -146,7 +155,7 @@ void Display::InjectFrame()
 		Texture* t = Texture::CreateFromText(it->text, it->textColor, it->fontsize);
 		
 		if(t)
-			t->Draw(it->x, it->y);
+			t->Draw(it->x, it->y, false);
 
 		delete t;
 	}
@@ -165,9 +174,9 @@ SDL_Renderer* const Display::GetRenderer()
 	return Display::renderer;
 }
 
-void Display::QueueTextureForRendering(Texture* const texture, int x, int y)
+void Display::QueueTextureForRendering(Texture* const texture, int x, int y, bool shiftToCenterPoint, bool isSpriteSheet /*=false*/, int spriteSheetOffsetX /*=0*/, int spriteSheetOffsetY /*=0*/)
 {
-	Display::textureQueue.push_back({ texture, x, y });
+	Display::textureQueue.push_back({ texture, x, y, shiftToCenterPoint, isSpriteSheet, spriteSheetOffsetX, spriteSheetOffsetY });
 }
 
 TTF_Font* const Display::GetFont(FontSize size)

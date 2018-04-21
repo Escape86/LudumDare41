@@ -119,15 +119,15 @@ bool Texture::Load()
 	return true;
 }
 
-void Texture::Draw(int x, int y, SDL_Rect* clip /*= nullptr*/, double angle /*= 0.0*/, SDL_Point* center /*= nullptr*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
+void Texture::Draw(int x, int y, bool shiftToCenter, SDL_Rect* clip /*= nullptr*/, double angle /*= 0.0*/, SDL_Point* center /*= nullptr*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
 #ifdef _DEBUG
 	assert(this->isLoaded);
 #endif
 
 	//Set rendering space and render to screen
-	int renderX = this->isForText ? x : x - (this->width / 2);
-	int renderY = this->isForText ? y : y - (this->height / 2);
+	int renderX = this->isForText ? x : shiftToCenter ? x - (this->width / 2) : x;
+	int renderY = this->isForText ? y : shiftToCenter ? y - (this->height / 2) : y;
 	SDL_Rect renderQuad = { renderX, renderY, this->width, this->height };
 
 	//Set clip rendering dimensions

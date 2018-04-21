@@ -2,6 +2,7 @@
 
 #pragma region Forward Declarations
 class Player;
+class Map;
 #pragma endregion
 
 class Game
@@ -17,6 +18,7 @@ public:
 
 private:
 	Player* player;
+	Map* map;
 
 	unsigned int previousFrameEndTime;
 };

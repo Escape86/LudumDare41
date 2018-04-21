@@ -16,10 +16,13 @@
 #define SCREEN_WIDTH					800
 #define SCREEN_HEIGHT					600
 
+#define TILE_WIDTH						24
+#define TILE_HEIGHT						24
+
 #define PLAYER_WIDTH					20
 #define PLAYER_HEIGHT					20
 
-#define PLAYER_VELOCITY					125
+#define PLAYER_VELOCITY					150
 #define ENEMY_VELOCITY					20
 
 #define JOYSTICK_DEAD_ZONE				8000

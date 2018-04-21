@@ -3,6 +3,7 @@
 #include "Display.h"
 #include "Constants.h"
 #include "Audio.h"
+#include "Map.h"
 
 #pragma region Constructor
 
@@ -10,6 +11,8 @@ Game::Game()
 {
 	this->player = new Player();
 	this->previousFrameEndTime = 0;
+
+	this->map = new Map("resources/test.csv", "resources/test.png");
 }
 
 #pragma endregion
@@ -23,6 +26,12 @@ Game::~Game()
 		delete this->player;
 		this->player = nullptr;
 	}
+
+	if (this->map)
+	{
+		delete this->map;
+		this->map = nullptr;
+	}
 }
 
 void Game::InjectFrame()
@@ -35,8 +44,8 @@ void Game::InjectFrame()
 		const int hp = this->player->GetHp();
 		if (hp <= 0)
 		{
-			//game over!
-			throw("TODO: HANDLE GAME OVER CONDITION HERE!");
+			//player died!
+			throw("TODO: HANDLE player died CONDITION HERE!");
 			return;
 		}
 	}
@@ -45,7 +54,16 @@ void Game::InjectFrame()
 	{
 		//update player
 		this->player->InjectFrame(elapsedTimeInMilliseconds, elapsedTimeInMilliseconds - this->previousFrameEndTime);
+	}
 
+	//now that updates are done, draw the frame
+	if (this->map)
+	{
+		this->map->Draw();
+	}
+
+	if (this->player)
+	{
 		//draw player
 		this->player->Draw();
 	}

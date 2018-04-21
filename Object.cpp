@@ -35,7 +35,7 @@ void Object::Draw()
 	assert(this->height);
 #endif
 
-	Display::QueueTextureForRendering(this->texture, this->x, this->y);
+	Display::QueueTextureForRendering(this->texture, this->x, this->y, true);
 }
 
 bool Object::TestCollision(Object* otherObject)
