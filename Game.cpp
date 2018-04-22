@@ -25,9 +25,9 @@ Game::Game()
 	this->player = new Player();
 	this->previousFrameEndTime = 0;
 
-	this->map = new Map("resources/test.csv", "resources/test.png");
+	this->map = new Map("resources/western.csv", "resources/western.png");
 
-	bool spawnLoadResult = this->LoadSpawns("resources/spawns.txt");
+	bool spawnLoadResult = this->LoadSpawns("resources/western_spawns.txt");
 
 #if _DEBUG
 	assert(spawnLoadResult);

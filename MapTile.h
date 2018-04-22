@@ -8,8 +8,9 @@ class Texture;
 
 struct TileInfo
 {
-	int textureOffsetX;
-	int textureOffsetY;
+	int rowOffset;
+	int columnOffset;
+	bool walkAble;
 };
 
 class MapTile
