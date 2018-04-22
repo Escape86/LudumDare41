@@ -50,12 +50,12 @@ void Map::Draw(int cameraShiftX, int cameraShiftY)
 	}
 }
 
-int Map::GetRowCount()
+int Map::GetRowCount() const
 {
 	return this->rowCount;
 }
 
-int Map::GetColumnCount()
+int Map::GetColumnCount() const
 {
 	return this->columnCount;
 }

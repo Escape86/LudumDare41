@@ -73,6 +73,9 @@ bool Display::Initialize()
 		}
 	}
 
+	//set Render Scale
+	SDL_RenderSetScale(renderer, RENDER_SCALE_AMOUNT, RENDER_SCALE_AMOUNT);
+
 	//everything initialized correctly!
 	return true;
 }

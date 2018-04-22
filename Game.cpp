@@ -5,16 +5,29 @@
 #include "Audio.h"
 #include "Map.h"
 
+#if _DEBUG
+	#include <assert.h>
+#endif
+
+Game* Game::_instance;
+
 #pragma region Constructor
 
 Game::Game()
 {
+
+#if _DEBUG
+	assert(Game::_instance == nullptr);	//already initialized!
+#endif	
+
 	this->player = new Player();
 	this->previousFrameEndTime = 0;
 
 	this->map = new Map("resources/test.csv", "resources/test.png");
 
 	this->camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
+	Game::_instance = this;
 }
 
 #pragma endregion
@@ -34,6 +47,11 @@ Game::~Game()
 		delete this->map;
 		this->map = nullptr;
 	}
+}
+
+const Game* Game::GetInstance()
+{
+	return Game::_instance;
 }
 
 void Game::InjectFrame()
@@ -59,8 +77,8 @@ void Game::InjectFrame()
 	}
 
 	//Center the camera over the dot
-	camera.x = (this->player->GetPositionX() + PLAYER_WIDTH / 2) - SCREEN_WIDTH / 2;
-	camera.y = (this->player->GetPositionY() + PLAYER_HEIGHT / 2) - SCREEN_HEIGHT / 2;
+	camera.x = (this->player->GetPositionX() + PLAYER_WIDTH / 2) - SCREEN_WIDTH / (2 * RENDER_SCALE_AMOUNT);
+	camera.y = (this->player->GetPositionY() + PLAYER_HEIGHT / 2) - SCREEN_HEIGHT / (2 * RENDER_SCALE_AMOUNT);
 
 	//Keep the camera in bounds
 	const int mapWidth = this->map->GetColumnCount() * TILE_WIDTH;
@@ -69,32 +87,23 @@ void Game::InjectFrame()
 	{
 		camera.x = 0;
 	}
+	else if ((camera.x + (camera.w / 2)) > mapWidth)
+	{
+		camera.x = mapWidth - (camera.w / 2);
+	}
 	if (camera.y < 0)
 	{
 		camera.y = 0;
 	}
-	if (camera.x > mapWidth - camera.w)
+	else if ((camera.y + (camera.h / 2)) > mapHeight)
 	{
-		camera.x = mapWidth - camera.w;
-	}
-	if (camera.y > mapHeight - camera.h)
-	{
-		camera.y = mapHeight - camera.h;
+		camera.y = mapHeight - (camera.h / 2);
 	}
 
 	//now that updates are done, draw the frame
 	if (this->map)
 	{
-		int cameraShiftX = ((float)camera.x / (float)camera.w) * mapWidth;
-		int cameraShiftY = ((float)camera.y / (float)camera.h) * mapHeight;
-
-		//enforce cameraShiftBounds (sorta a hack, but fuck it... no time!)
-		if ((cameraShiftX + camera.w) > mapWidth)
-			cameraShiftX = mapWidth - camera.w;
-		if ((cameraShiftY + camera.h) > mapHeight)
-			cameraShiftY = mapHeight - camera.h;
-
-		this->map->Draw(cameraShiftX, cameraShiftY);
+		this->map->Draw(camera.x, camera.y);
 	}
 
 	if (this->player)
@@ -163,6 +172,16 @@ void Game::InjectControllerStickMovement(unsigned char axis, short value)
 			this->player->ResetVerticalVelocity();
 		}
 	}
+}
+
+const Map* Game::GetMap() const
+{
+	return this->map;
+}
+
+const SDL_Rect& Game::GetCamera() const
+{
+	return this->camera;
 }
 
 #pragma endregion

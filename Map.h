@@ -16,8 +16,8 @@ public:
 
 	void Draw(int cameraShiftX, int cameraShiftY);
 
-	int GetRowCount();
-	int GetColumnCount();
+	int GetRowCount() const;
+	int GetColumnCount() const;
 
 private:
 	void readDataFile(const std::string& tileDatafilePath);

@@ -13,6 +13,8 @@
 #define WHITE							{ 255, 255, 255}
 #pragma endregion
 
+#define RENDER_SCALE_AMOUNT				2.0f	//if you change this you'll need to change the values in Game.cpp that enforce camera bounds
+
 #define SCREEN_WIDTH					800
 #define SCREEN_HEIGHT					600
 

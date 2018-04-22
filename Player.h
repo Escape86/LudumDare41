@@ -10,7 +10,7 @@ public:
 	~Player();
 
 	void InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime) override;
-	void Draw();
+	void Draw() override;
 	void OnKeyDown(int key);
 	void OnKeyUp(int key);
 

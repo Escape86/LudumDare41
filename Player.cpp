@@ -3,6 +3,8 @@
 #include "Display.h"
 #include "Audio.h"
 #include "Constants.h"
+#include "Game.h"
+#include "Map.h"
 
 #if _DEBUG
 	#include <assert.h>
@@ -10,7 +12,7 @@
 
 #pragma region Constructor
 
-Player::Player() : Object((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), PLAYER_TEXTURE_PATH)
+Player::Player() : Object(PLAYER_WIDTH + 100, PLAYER_HEIGHT + 100, PLAYER_TEXTURE_PATH)
 {
 	this->horizontalVelocity = 0;
 	this->verticalVelocity = 0;
@@ -46,28 +48,35 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 	int halfWidth = this->width / 2;
 	int halfHeight = this->height / 2;
 
+	const Game* game = Game::GetInstance();
+	const int mapWidth = game->GetMap()->GetColumnCount() * TILE_WIDTH;
+	const int mapHeight = game->GetMap()->GetRowCount() * TILE_HEIGHT;
+
 	if (this->x - halfWidth < 0)
 	{
 		this->x = halfWidth;
 	}
-	else if (this->x + halfWidth > SCREEN_WIDTH)
+	else if (this->x + halfWidth > mapWidth)
 	{
-		this->x = SCREEN_WIDTH - halfWidth;
+		this->x = mapWidth - halfWidth;
 	}
 
 	if (this->y - halfHeight < 0)
 	{
 		this->y = halfHeight;
 	}
-	else if (this->y + halfHeight > SCREEN_HEIGHT)
+	else if (this->y + halfHeight > mapHeight)
 	{
-		this->y = SCREEN_HEIGHT - halfHeight;
+		this->y = mapHeight - halfHeight;
 	}
 }
 
 void Player::Draw()
 { 
-	Display::QueueTextureForRendering(this->texture, this->x, this->y, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
+	const Game* game = Game::GetInstance();
+	const SDL_Rect& camera = game->GetCamera();
+
+	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
 }
 
 void Player::OnKeyDown(int key)
