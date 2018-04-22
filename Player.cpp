@@ -4,6 +4,10 @@
 #include "Audio.h"
 #include "Constants.h"
 
+#if _DEBUG
+	#include <assert.h>
+#endif
+
 const int OverChargeTimerDuration = 1000;
 
 #pragma region Constructor
@@ -75,28 +79,26 @@ void Player::OnKeyDown(int key)
 		case SDLK_w:
 		case SDLK_UP:
 			this->verticalVelocity -= PLAYER_VELOCITY;
-			this->spriteSheetOffsetX = BACK_X;
-			this->spriteSheetOffsetY = BACK_Y;
+			this->facing = Direction::UP;
 			break;
 		case SDLK_s:
 		case SDLK_DOWN:
 			this->verticalVelocity += PLAYER_VELOCITY;
-			this->spriteSheetOffsetX = FRONT_X;
-			this->spriteSheetOffsetY = FRONT_Y;
+			this->facing = Direction::DOWN;
 			break;
 		case SDLK_a:
 		case SDLK_LEFT:
 			this->horizontalVelocity -= PLAYER_VELOCITY;
-			this->spriteSheetOffsetX = LEFT_X;
-			this->spriteSheetOffsetY = LEFT_Y;
+			this->facing = Direction::LEFT;
 			break;
 		case SDLK_d:
 		case SDLK_RIGHT:
 			this->horizontalVelocity += PLAYER_VELOCITY;
-			this->spriteSheetOffsetX = RIGHT_X;
-			this->spriteSheetOffsetY = RIGHT_Y;
+			this->facing = Direction::RIGHT;
 			break;
 	}
+
+	this->onDirectionChange();
 
 	//enforce velocity min/max values
 	if (this->verticalVelocity > PLAYER_VELOCITY)
@@ -167,6 +169,39 @@ int Player::GetHp()
 void Player::SetHp(int hp)
 {
 	this->hp = hp;
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+
+void Player::onDirectionChange()
+{
+	switch (this->facing)
+	{
+	case Direction::UP:
+		this->spriteSheetOffsetX = PLAYER_WIDTH;
+		this->spriteSheetOffsetY = 0;
+		break;
+	case Direction::DOWN:
+		this->spriteSheetOffsetX = 0;
+		this->spriteSheetOffsetY = 0;
+		break;
+	case Direction::LEFT:
+		this->spriteSheetOffsetX = PLAYER_WIDTH;
+		this->spriteSheetOffsetY = PLAYER_HEIGHT;
+		break;
+	case Direction::RIGHT:
+		this->spriteSheetOffsetX = 0;
+		this->spriteSheetOffsetY = PLAYER_HEIGHT;
+		break;
+
+	default:
+#if _DEBUG
+		assert(false);	//wtf direction is this?
+#endif
+		break;
+	}
 }
 
 #pragma endregion

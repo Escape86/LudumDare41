@@ -16,16 +16,10 @@ public:
 
 	enum Direction
 	{
-		FRONT_X = 0,
-		FRONT_Y = 0,
-		LEFT_X = PLAYER_WIDTH,
-		LEFT_Y = PLAYER_HEIGHT,
-		RIGHT_X = 0,
-		RIGHT_Y = PLAYER_HEIGHT,
-		BACK_X = PLAYER_WIDTH,
-		BACK_Y = 0,
-
-		//remember to add corresponding load functionality when adding new font
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
 	};
 
 	void ResetHorizontalVelocity();
@@ -35,9 +29,13 @@ public:
 	void SetHp(int hp);
 
 private:
+	void onDirectionChange();
+
 	int horizontalVelocity;
 	int verticalVelocity;
-	int spriteSheetOffsetX; // For making the character change direction
+	Direction facing;
+
+	int spriteSheetOffsetX;
 	int spriteSheetOffsetY;
 
 	int hp;
