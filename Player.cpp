@@ -8,8 +8,6 @@
 	#include <assert.h>
 #endif
 
-const int OverChargeTimerDuration = 1000;
-
 #pragma region Constructor
 
 Player::Player() : Object((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), PLAYER_TEXTURE_PATH)
