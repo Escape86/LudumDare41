@@ -1,4 +1,5 @@
 #pragma once
+#include "SDL_rect.h"
 
 #pragma region Forward Declarations
 class Player;
@@ -19,6 +20,6 @@ public:
 private:
 	Player* player;
 	Map* map;
-
+	SDL_Rect camera;
 	unsigned int previousFrameEndTime;
 };

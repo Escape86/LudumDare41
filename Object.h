@@ -19,6 +19,9 @@ public:
 	bool TestCollision(Object* otherObject);
 	void SetTexture(std::string texturePath);
 
+	double GetPositionX();
+	double GetPositionY();
+
 protected:
 	double x;
 	double y;

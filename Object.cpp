@@ -104,4 +104,14 @@ void Object::SetTexture(std::string texturePath)
 	this->texture->Load();
 }
 
+double Object::GetPositionX()
+{
+	return this->x;
+}
+
+double Object::GetPositionY()
+{
+	return this->y;
+}
+
 #pragma endregion

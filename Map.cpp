@@ -35,7 +35,7 @@ Map::~Map()
 	this->mapTiles.clear();
 }
 
-void Map::Draw()
+void Map::Draw(int cameraShiftX, int cameraShiftY)
 {
 #if _DEBUG
 	assert(this->rowCount > 0);
@@ -46,8 +46,18 @@ void Map::Draw()
 
 	for (MapTile* tile : this->mapTiles)
 	{
-		tile->Draw(this->texture);
+		tile->Draw(this->texture, cameraShiftX, cameraShiftY);
 	}
+}
+
+int Map::GetRowCount()
+{
+	return this->rowCount;
+}
+
+int Map::GetColumnCount()
+{
+	return this->columnCount;
 }
 
 #pragma endregion

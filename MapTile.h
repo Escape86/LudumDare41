@@ -18,7 +18,7 @@ public:
 	MapTile(const int id, const int row, const int column);
 	~MapTile();
 
-	void Draw(Texture* texture);
+	void Draw(Texture* texture, int cameraShiftX, int cameraShiftY);
 
 private:
 	const int id;
