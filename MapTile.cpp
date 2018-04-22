@@ -2,8 +2,13 @@
 #include "Display.h"
 #include "Constants.h"
 #include <map>
+#include <algorithm>
 
-std::map<int, TileInfo> tileIdToInfoLookup		// { id, { rowOffset, columnOffset, walkAble }}
+#if _DEBUG
+	#include <assert.h>
+#endif
+
+std::map<int, TileInfo> tileIdToInfoLookup		// { id, { spriteSheetRowOffset, spriteSheetColumnOffset, walkAble }}
 {
 	{ 0,  { 0,  0, false } },
 	{ 1,  { 0,  1, true } },
@@ -21,12 +26,12 @@ std::map<int, TileInfo> tileIdToInfoLookup		// { id, { rowOffset, columnOffset, 
 	{ 13, { 4,  1, false } },
 	{ 14, { 4,  2, false } },
 	{ 15, { 5,  0, false } },
-	{ 16, { 5,  1, true } },
+	{ 16, { 5,  1, false } },
 	{ 17, { 5,  2, false } },
 	{ 18, { 6,  0, false } },
 	{ 19, { 6,  1, false } },
 	{ 20, { 6,  2, false } },
-	{ 21, { 7,  0, false } },
+	{ 21, { 7,  0, true } },
 	{ 22, { 7,  1, false } },
 	{ 23, { 7,  2, false } },
 	{ 24, { 8,  0, false } },
@@ -41,9 +46,10 @@ std::map<int, TileInfo> tileIdToInfoLookup		// { id, { rowOffset, columnOffset, 
 
 #pragma region Constructor
 
-MapTile::MapTile(const int id, const int row, const int column)
-	: id(id), row(row), column(column)
+MapTile::MapTile(const int id, const int worldGridRow, const int worldGridColumn)
+	: id(id), worldGridRow(worldGridRow), worldGridColumn(worldGridColumn)
 {
+	this->walkable = tileIdToInfoLookup[this->id].walkAble;
 }
 
 #pragma endregion
@@ -57,7 +63,22 @@ MapTile::~MapTile()
 
 void MapTile::Draw(Texture* texture, int cameraShiftX, int cameraShiftY)
 {
-	Display::QueueTextureForRendering(texture, (this->column * TILE_WIDTH) - cameraShiftX, (this->row * TILE_HEIGHT) - cameraShiftY, TILE_WIDTH, TILE_HEIGHT, false, true, tileIdToInfoLookup[this->id].columnOffset * TILE_WIDTH, tileIdToInfoLookup[this->id].rowOffset * TILE_HEIGHT);
+	Display::QueueTextureForRendering(texture, (this->worldGridColumn * TILE_WIDTH) - cameraShiftX, (this->worldGridRow * TILE_HEIGHT) - cameraShiftY, TILE_WIDTH, TILE_HEIGHT, false, true, tileIdToInfoLookup[this->id].spriteSheetColumnOffset * TILE_WIDTH, tileIdToInfoLookup[this->id].spriteSheetRowOffset * TILE_HEIGHT);
+}
+
+int MapTile::GetWorldGridRow() const
+{
+	return this->worldGridRow;
+}
+
+int MapTile::GetWorldGridColumn() const
+{
+	return this->worldGridColumn;
+}
+
+bool MapTile::GetIsWalkable() const
+{
+	return this->walkable;
 }
 
 #pragma endregion

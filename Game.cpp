@@ -97,7 +97,7 @@ void Game::InjectFrame()
 		this->player->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
 	}
 
-	//Center the camera over the dot
+	//Center the camera over the player
 	camera.x = (this->player->GetPositionX() + PLAYER_WIDTH / 2) - SCREEN_WIDTH / (2 * RENDER_SCALE_AMOUNT);
 	camera.y = (this->player->GetPositionY() + PLAYER_HEIGHT / 2) - SCREEN_HEIGHT / (2 * RENDER_SCALE_AMOUNT);
 

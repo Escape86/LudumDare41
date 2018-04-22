@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "Game.h"
 #include "Map.h"
+#include "MapTile.h"
 
 #if _DEBUG
 	#include <assert.h>
@@ -12,7 +13,7 @@
 
 #pragma region Constructor
 
-Player::Player() : Object(PLAYER_WIDTH + 100, PLAYER_HEIGHT + 100, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_TEXTURE_PATH)
+Player::Player() : Object(PLAYER_WIDTH + 150, PLAYER_HEIGHT + 150, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_TEXTURE_PATH)
 {
 	this->horizontalVelocity = 0;
 	this->verticalVelocity = 0;
@@ -37,6 +38,11 @@ Player::~Player()
 void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime)
 {
 	float previousFrameTimeInSeconds = (previousFrameTime / 1000.0f);
+
+	double startPosX = this->x;
+	double startPosY = this->y;
+	int startTileRow = static_cast<int>((this->y - (PLAYER_HEIGHT / 2)) / TILE_HEIGHT);
+	int startTileColumn = static_cast<int>((this->x - (PLAYER_WIDTH / 2)) / TILE_WIDTH);
 
 	//update position
 	this->x += (this->horizontalVelocity * previousFrameTimeInSeconds);
@@ -66,6 +72,22 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 	else if (this->y + halfHeight > mapHeight)
 	{
 		this->y = mapHeight - halfHeight;
+	}
+
+	//check if we're attempting to cross to a new tile that isn't walkable
+	int endTileRow = static_cast<int>((this->y - (PLAYER_HEIGHT / 2)) / TILE_HEIGHT);
+	int endTileColumn = static_cast<int>((this->x - (PLAYER_WIDTH / 2)) / TILE_WIDTH);
+
+	if (startTileRow != endTileRow || startTileColumn != endTileColumn)
+	{
+		//we crossed into a new tile, check if it's walkable
+		const MapTile* tile = Game::GetInstance()->GetMap()->GetTileByWorldGridLocation(endTileRow, endTileColumn);
+		if (tile == nullptr || !tile->GetIsWalkable())
+		{
+			//not walkable, so move them back!
+			this->x = startPosX;
+			this->y = startPosY;
+		}
 	}
 }
 

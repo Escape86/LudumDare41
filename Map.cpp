@@ -60,6 +60,21 @@ int Map::GetColumnCount() const
 	return this->columnCount;
 }
 
+const MapTile* Map::GetTileByWorldGridLocation(int row, int column) const
+{
+	for (const MapTile* tile : this->mapTiles)
+	{
+		if (tile->GetWorldGridRow() == row && tile->GetWorldGridColumn() == column)
+			return tile;
+	}
+
+#if _DEBUG
+	assert(false);	//we failed to find it!
+#endif
+
+	return nullptr;
+}
+
 #pragma endregion
 
 #pragma region Private Methods

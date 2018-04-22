@@ -151,10 +151,7 @@ void Display::InjectFrame()
 
 	Display::textureQueue.clear();
 	
-	// CreateText for testing!
-	CreateText("People say they've seen aliens", 12, CHAT_POS_1,  FontSize::TWENTY, false);
-	CreateText("and their stuff is going missing!", 12, CHAT_POS_2,  FontSize::TWENTY, true);
-	
+	//create chatbox if one or more queued texts have requested it
 	auto it = std::find_if(textQueue.begin(), textQueue.end(), [](QueuedText& qt) { return qt.useChatBox; });
 	if (it != textQueue.end())
 	{
@@ -178,7 +175,7 @@ void Display::InjectFrame()
 		SDL_RenderFillRect(Display::renderer, &chatBox);
 	}
 	
-
+	//render queued text
 	for (std::vector<QueuedText>::iterator it = Display::textQueue.begin(); it != Display::textQueue.end(); ++it)
 	{
 		if (!it->isVisible || it->text.empty())
@@ -192,6 +189,7 @@ void Display::InjectFrame()
 
 		delete t;
 	}
+
 	//Update screen
 	SDL_RenderPresent(Display::renderer);
 }

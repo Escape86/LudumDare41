@@ -18,6 +18,7 @@ public:
 
 	int GetRowCount() const;
 	int GetColumnCount() const;
+	const MapTile* GetTileByWorldGridLocation(int row, int column) const;
 
 private:
 	void readDataFile(const std::string& tileDatafilePath);
