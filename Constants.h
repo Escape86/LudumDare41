@@ -21,8 +21,8 @@
 #define TILE_WIDTH						24
 #define TILE_HEIGHT						24
 
-#define PLAYER_WIDTH					20
-#define PLAYER_HEIGHT					20
+#define PLAYER_WIDTH					24
+#define PLAYER_HEIGHT					24
 
 #define PLAYER_VELOCITY					275
 #define ENEMY_VELOCITY					20
