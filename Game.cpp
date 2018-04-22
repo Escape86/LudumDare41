@@ -13,6 +13,8 @@ Game::Game()
 	this->previousFrameEndTime = 0;
 
 	this->map = new Map("resources/test.csv", "resources/test.png");
+
+	this->camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 }
 
 #pragma endregion
@@ -56,10 +58,43 @@ void Game::InjectFrame()
 		this->player->InjectFrame(elapsedTimeInMilliseconds, elapsedTimeInMilliseconds - this->previousFrameEndTime);
 	}
 
+	//Center the camera over the dot
+	camera.x = (this->player->GetPositionX() + PLAYER_WIDTH / 2) - SCREEN_WIDTH / 2;
+	camera.y = (this->player->GetPositionY() + PLAYER_HEIGHT / 2) - SCREEN_HEIGHT / 2;
+
+	//Keep the camera in bounds
+	const int mapWidth = this->map->GetColumnCount() * TILE_WIDTH;
+	const int mapHeight = this->map->GetRowCount() * TILE_HEIGHT;
+	if (camera.x < 0)
+	{
+		camera.x = 0;
+	}
+	if (camera.y < 0)
+	{
+		camera.y = 0;
+	}
+	if (camera.x > mapWidth - camera.w)
+	{
+		camera.x = mapWidth - camera.w;
+	}
+	if (camera.y > mapHeight - camera.h)
+	{
+		camera.y = mapHeight - camera.h;
+	}
+
 	//now that updates are done, draw the frame
 	if (this->map)
 	{
-		this->map->Draw();
+		int cameraShiftX = ((float)camera.x / (float)camera.w) * mapWidth;
+		int cameraShiftY = ((float)camera.y / (float)camera.h) * mapHeight;
+
+		//enforce cameraShiftBounds (sorta a hack, but fuck it... no time!)
+		if ((cameraShiftX + camera.w) > mapWidth)
+			cameraShiftX = mapWidth - camera.w;
+		if ((cameraShiftY + camera.h) > mapHeight)
+			cameraShiftY = mapHeight - camera.h;
+
+		this->map->Draw(cameraShiftX, cameraShiftY);
 	}
 
 	if (this->player)
@@ -73,13 +108,13 @@ void Game::InjectFrame()
 
 void Game::InjectKeyDown(int key)
 {
-	if(this->player)
+	if (this->player)
 		this->player->OnKeyDown(key);
 }
 
 void Game::InjectKeyUp(int key)
 {
-	if(this->player)
+	if (this->player)
 		this->player->OnKeyUp(key);
 }
 

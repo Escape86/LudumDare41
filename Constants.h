@@ -22,7 +22,7 @@
 #define PLAYER_WIDTH					20
 #define PLAYER_HEIGHT					20
 
-#define PLAYER_VELOCITY					150
+#define PLAYER_VELOCITY					275
 #define ENEMY_VELOCITY					20
 
 #define JOYSTICK_DEAD_ZONE				8000

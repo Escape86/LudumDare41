@@ -14,7 +14,10 @@ public:
 	Map(std::string tileDatafilePath, std::string textureFilepath);
 	~Map();
 
-	void Draw();
+	void Draw(int cameraShiftX, int cameraShiftY);
+
+	int GetRowCount();
+	int GetColumnCount();
 
 private:
 	void readDataFile(const std::string& tileDatafilePath);
