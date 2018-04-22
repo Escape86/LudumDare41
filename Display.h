@@ -44,9 +44,10 @@ public:
 		Display::FontSize fontsize;
 		bool isVisible;
 		int id;
+		bool useChatBox;
 	};
 
-	static int CreateText(std::string text, int x, int y, Display::FontSize fontSize, SDL_Color textColor = { 0, 0, 0 });
+	static int CreateText(std::string text, int x, int y, Display::FontSize fontSize, bool useChatBox, SDL_Color textColor = { 0, 0, 0 });
 	static bool UpdateText(int id, std::string text, SDL_Color textColor = { 0, 0, 0 });
 	static bool MoveText(int id, int x, int y);
 	static bool SetTextIsVisible(int id, bool isVisible);

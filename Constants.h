@@ -27,6 +27,9 @@
 #define PLAYER_VELOCITY					275
 #define ENEMY_VELOCITY					20
 
+#define CHAT_POS_1						SCREEN_HEIGHT * .41 + 5
+#define CHAT_POS_2						SCREEN_HEIGHT * .45 + 4
+
 #define JOYSTICK_DEAD_ZONE				8000
 
 #define WINDOW_TITLE					"CowHunt"

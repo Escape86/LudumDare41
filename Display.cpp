@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <iostream>
+#include <algorithm>
 
 #pragma region Public Methods
 
@@ -149,12 +150,41 @@ void Display::InjectFrame()
 	}
 
 	Display::textureQueue.clear();
+	
+	// CreateText for testing!
+	CreateText("People say they've seen aliens", 12, CHAT_POS_1,  FontSize::TWENTY, false, {255,255,255});
+	CreateText("and their stuff is going missing!", 12, CHAT_POS_2,  FontSize::TWENTY, true, { 255,255,255 });
+	
+	auto it = std::find_if(textQueue.begin(), textQueue.end(), [](QueuedText& qt) { return qt.useChatBox; });
+	if (it != textQueue.end())
+	{
+		// draw rectangle here
+		double chatY = 0.0;
+		double chatHeight = 0.0;
+
+		if (it->fontsize == FontSize::TWENTY)
+		{
+			chatY = SCREEN_HEIGHT * .41;
+			chatHeight = 50; // should be about right with ~5 pixels between text
+		}
+		else //we only have 2 fontsizes (so this is thirtyfour)
+		{
+			chatY = SCREEN_HEIGHT *.368;
+			chatHeight = 75;
+		}
+		//Render chat box
+		SDL_Rect chatBox = { 5.0, chatY, (SCREEN_WIDTH * .5) - 10.0, chatHeight };
+		SDL_SetRenderDrawColor(Display::renderer, 0x00, 0x00, 0xFF, 0xFF);
+		SDL_RenderFillRect(Display::renderer, &chatBox);
+	}
+	
 
 	for (std::vector<QueuedText>::iterator it = Display::textQueue.begin(); it != Display::textQueue.end(); ++it)
 	{
 		if (!it->isVisible || it->text.empty())
 			continue;
 
+	
 		Texture* t = Texture::CreateFromText(it->text, it->textColor, it->fontsize);
 		
 		if(t)
@@ -162,7 +192,6 @@ void Display::InjectFrame()
 
 		delete t;
 	}
-	
 	//Update screen
 	SDL_RenderPresent(Display::renderer);
 }
@@ -187,10 +216,10 @@ TTF_Font* const Display::GetFont(FontSize size)
 	return Display::fonts[size];
 }
 
-int Display::CreateText(std::string text, int x, int y, Display::FontSize fontSize, SDL_Color textColor /*= { 0, 0, 0 }*/)
+int Display::CreateText(std::string text, int x, int y, Display::FontSize fontSize, bool useChatBox, SDL_Color textColor /*= { 0, 0, 0 }*/)
 {
 	int id = Display::textControlIdCounter++;
-	Display::textQueue.push_back(QueuedText{ x, y, text, textColor, fontSize, true, id });
+	Display::textQueue.push_back(QueuedText{ x, y, text, textColor, fontSize, true, id, useChatBox });
 	return id;
 }
 
