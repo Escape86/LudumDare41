@@ -16,8 +16,8 @@ Object::Object(double spawnX, double spawnY, int width, int height, std::string 
 	assert(this->height);
 #endif
 
-	this->x = x;
-	this->y = y;
+	this->x = spawnX;
+	this->y = spawnY;
 
 	this->SetTexture(texturePath);
 }
@@ -41,7 +41,7 @@ void Object::Draw()
 	assert(this->height);
 #endif
 
-	Display::QueueTextureForRendering(this->texture, this->x, this->y, true);
+	Display::QueueTextureForRendering(this->texture, this->x, this->y, this->width, this->height, true);
 }
 
 bool Object::TestCollision(Object* otherObject)
@@ -107,7 +107,11 @@ void Object::SetTexture(std::string texturePath)
 	}
 
 	this->texture = new Texture(texturePath);
-	this->texture->Load();
+	bool loadTextureResult = this->texture->Load();
+
+#if _DEBUG
+	assert(loadTextureResult);
+#endif
 }
 
 double Object::GetPositionX()

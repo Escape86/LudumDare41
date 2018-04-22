@@ -29,7 +29,7 @@ MapTile::~MapTile()
 
 void MapTile::Draw(Texture* texture, int cameraShiftX, int cameraShiftY)
 {
-	Display::QueueTextureForRendering(texture, (this->column * TILE_WIDTH) - cameraShiftX, (this->row * TILE_HEIGHT) - cameraShiftY, false, true, tileIdToInfoLookup[this->id].textureOffsetX * TILE_WIDTH, tileIdToInfoLookup[this->id].textureOffsetY * TILE_HEIGHT);
+	Display::QueueTextureForRendering(texture, (this->column * TILE_WIDTH) - cameraShiftX, (this->row * TILE_HEIGHT) - cameraShiftY, TILE_WIDTH, TILE_HEIGHT, false, true, tileIdToInfoLookup[this->id].textureOffsetX * TILE_WIDTH, tileIdToInfoLookup[this->id].textureOffsetY * TILE_HEIGHT);
 }
 
 #pragma endregion

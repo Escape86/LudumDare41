@@ -12,7 +12,7 @@
 
 #pragma region Constructor
 
-Player::Player() : Object(PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_WIDTH + 100, PLAYER_HEIGHT + 100, PLAYER_TEXTURE_PATH)
+Player::Player() : Object(PLAYER_WIDTH + 100, PLAYER_HEIGHT + 100, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_TEXTURE_PATH)
 {
 	this->horizontalVelocity = 0;
 	this->verticalVelocity = 0;
@@ -74,7 +74,7 @@ void Player::Draw()
 	const Game* game = Game::GetInstance();
 	const SDL_Rect& camera = game->GetCamera();
 
-	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
+	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, this->width, this->height, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
 }
 
 void Player::OnKeyDown(int key)

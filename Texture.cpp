@@ -6,9 +6,9 @@
 	#include <assert.h>
 #endif
 
-const Uint8 opacityR = 0xFF;
-const Uint8 opacityG = 0xFF;
-const Uint8 opacityB = 0xFF;
+const Uint8 opacityR = 0x00;
+const Uint8 opacityG = 0x00;
+const Uint8 opacityB = 0x00;
 
 #pragma region Constructor
 

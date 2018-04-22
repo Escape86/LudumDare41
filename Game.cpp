@@ -4,6 +4,8 @@
 #include "Constants.h"
 #include "Audio.h"
 #include "Map.h"
+#include "Spawn.h"
+#include <fstream>
 
 #if _DEBUG
 	#include <assert.h>
@@ -25,6 +27,12 @@ Game::Game()
 
 	this->map = new Map("resources/test.csv", "resources/test.png");
 
+	bool spawnLoadResult = this->LoadSpawns("resources/spawns.txt");
+
+#if _DEBUG
+	assert(spawnLoadResult);
+#endif
+
 	this->camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	Game::_instance = this;
@@ -36,6 +44,12 @@ Game::Game()
 
 Game::~Game()
 {
+	for (Spawn* spawn : this->spawns)
+	{
+		delete spawn;
+	}
+	this->spawns.clear();
+
 	if (this->player)
 	{
 		delete this->player;
@@ -58,6 +72,8 @@ void Game::InjectFrame()
 {
 	Uint32 elapsedTimeInMilliseconds = SDL_GetTicks();
 
+	const unsigned int previousFrameTime = elapsedTimeInMilliseconds - this->previousFrameEndTime;
+
 	if (this->player)
 	{
 		//check health for gameover condition
@@ -70,10 +86,15 @@ void Game::InjectFrame()
 		}
 	}
 
+	for (Spawn* spawn : this->spawns)
+	{
+		spawn->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
+	}
+
 	if (this->player)
 	{
 		//update player
-		this->player->InjectFrame(elapsedTimeInMilliseconds, elapsedTimeInMilliseconds - this->previousFrameEndTime);
+		this->player->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
 	}
 
 	//Center the camera over the dot
@@ -104,6 +125,11 @@ void Game::InjectFrame()
 	if (this->map)
 	{
 		this->map->Draw(camera.x, camera.y);
+	}
+
+	for (Spawn* spawn : this->spawns)
+	{
+		spawn->Draw();
 	}
 
 	if (this->player)
@@ -172,6 +198,67 @@ void Game::InjectControllerStickMovement(unsigned char axis, short value)
 			this->player->ResetVerticalVelocity();
 		}
 	}
+}
+
+bool Game::LoadSpawns(std::string filepath)
+{
+	std::ifstream file(filepath.c_str());
+
+	if (!file.is_open())
+		return false;
+
+	std::string line;
+	while (std::getline(file, line))
+	{
+		if (line.length() == 0)
+			continue;
+
+		char* l = _strdup(line.c_str());
+
+		char* context = NULL;
+
+		char* idToken				= strtok_s(l, ",", &context);
+		char* spawnXToken			= strtok_s(NULL, ",", &context);
+		char* spawnYToken			= strtok_s(NULL, ",", &context);
+		char* widthToken			= strtok_s(NULL, ",", &context);
+		char* heightToken			= strtok_s(NULL, ",", &context);
+		char* texturePathToken		= strtok_s(NULL, ",", &context);
+		char* spriteOffsetXToken	= strtok_s(NULL, ",", &context);
+		char* spriteOffsetYToken	= strtok_s(NULL, ",", &context);
+
+		if ((idToken			== NULL) ||
+			(spawnXToken		== NULL) ||
+			(spawnYToken		== NULL) ||
+			(widthToken			== NULL) ||
+			(heightToken		== NULL) ||
+			(texturePathToken	== NULL) ||
+			(spriteOffsetXToken == NULL) ||
+			(spriteOffsetYToken == NULL))
+			return false;
+
+			int id = atoi(idToken);
+			double spawnX = atof(spawnXToken);
+			double spawnY = atof(spawnYToken);
+			int width = atoi(widthToken);
+			int height = atoi(heightToken);
+			std::string texturePath = texturePathToken;
+			int spriteOffsetX = atoi(spriteOffsetXToken);
+			int spriteOffsetY = atoi(spriteOffsetYToken);
+
+			//clear whitespace from texturePath
+			while (texturePath.size() && isspace(texturePath.front()))	//front
+				texturePath.erase(texturePath.begin());
+			while (texturePath.size() && isspace(texturePath.back()))	//back
+				texturePath.pop_back();
+
+			this->spawns.push_back(new Spawn(id, spawnX, spawnY, width, height, texturePath, spriteOffsetX, spriteOffsetY));
+
+		free(l);
+	}
+
+	file.close();
+
+	return true;
 }
 
 const Map* Game::GetMap() const

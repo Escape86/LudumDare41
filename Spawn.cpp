@@ -10,10 +10,10 @@
 
 #pragma region Constructor
 
-Spawn::Spawn(double spawnX, double spawnY, int width, int height, std::string texturePath) : Object(spawnX, spawnY, width, height, texturePath)
+Spawn::Spawn(int id, double spawnX, double spawnY, int width, int height, std::string texturePath, int spriteSheetOffsetX, int spriteSheetOffsetY) : Object(spawnX, spawnY, width, height, texturePath), id(id)
 {
-	this->spriteSheetOffsetX = 0;
-	this->spriteSheetOffsetY = 0;
+	this->spriteSheetOffsetX = spriteSheetOffsetX;
+	this->spriteSheetOffsetY = spriteSheetOffsetY;
 }
 
 #pragma endregion
@@ -58,7 +58,7 @@ void Spawn::Draw()
 	const Game* game = Game::GetInstance();
 	const SDL_Rect& camera = game->GetCamera();
 
-	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
+	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, this->width, this->height, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
 }
 
 #pragma endregion
