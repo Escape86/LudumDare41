@@ -152,8 +152,8 @@ void Display::InjectFrame()
 	Display::textureQueue.clear();
 	
 	// CreateText for testing!
-	CreateText("People say they've seen aliens", 12, CHAT_POS_1,  FontSize::TWENTY, false, {255,255,255});
-	CreateText("and their stuff is going missing!", 12, CHAT_POS_2,  FontSize::TWENTY, true, { 255,255,255 });
+	CreateText("People say they've seen aliens", 12, CHAT_POS_1,  FontSize::TWENTY, false);
+	CreateText("and their stuff is going missing!", 12, CHAT_POS_2,  FontSize::TWENTY, true);
 	
 	auto it = std::find_if(textQueue.begin(), textQueue.end(), [](QueuedText& qt) { return qt.useChatBox; });
 	if (it != textQueue.end())
