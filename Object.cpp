@@ -8,8 +8,14 @@
 
 #pragma region Constructor
 
-Object::Object(double x, double y, std::string texturePath)
+Object::Object(double spawnX, double spawnY, int width, int height, std::string texturePath)
+	: width(width), height(height)
 {
+#if _DEBUG
+	assert(this->width);
+	assert(this->height);
+#endif
+
 	this->x = x;
 	this->y = y;
 

@@ -14,14 +14,6 @@ public:
 	void OnKeyDown(int key);
 	void OnKeyUp(int key);
 
-	enum Direction
-	{
-		UP,
-		DOWN,
-		LEFT,
-		RIGHT
-	};
-
 	void ResetHorizontalVelocity();
 	void ResetVerticalVelocity();
 
@@ -33,10 +25,6 @@ private:
 
 	int horizontalVelocity;
 	int verticalVelocity;
-	Direction facing;
-
-	int spriteSheetOffsetX;
-	int spriteSheetOffsetY;
 
 	int hp;
 

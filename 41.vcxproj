@@ -27,6 +27,7 @@
     <ClCompile Include="MapTile.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Spawn.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -38,6 +39,7 @@
     <ClInclude Include="MapTile.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Spawn.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

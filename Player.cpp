@@ -12,7 +12,7 @@
 
 #pragma region Constructor
 
-Player::Player() : Object(PLAYER_WIDTH + 100, PLAYER_HEIGHT + 100, PLAYER_TEXTURE_PATH)
+Player::Player() : Object(PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_WIDTH + 100, PLAYER_HEIGHT + 100, PLAYER_TEXTURE_PATH)
 {
 	this->horizontalVelocity = 0;
 	this->verticalVelocity = 0;
@@ -21,8 +21,6 @@ Player::Player() : Object(PLAYER_WIDTH + 100, PLAYER_HEIGHT + 100, PLAYER_TEXTUR
 	this->spriteSheetOffsetY = 0;
 
 	this->hp = 100;
-	this->width = PLAYER_WIDTH;
-	this->height = PLAYER_HEIGHT;
 
 	//prevent level switching from causing keyups to occur without a corresponding keydown
 	this->keydownPrimed = false;

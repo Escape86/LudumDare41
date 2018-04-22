@@ -6,10 +6,18 @@
 class Texture;
 #pragma endregion
 
+enum Direction
+{
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+};
+
 class Object
 {
 public:
-	Object(double x, double y, std::string texturePath);
+	Object(double spawnX, double spawnY, int width, int height, std::string texturePath);
 	virtual ~Object();
 
 	virtual void InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime) = 0;
@@ -25,7 +33,10 @@ public:
 protected:
 	double x;
 	double y;
-	int width;
-	int height;
+	const int width;
+	const int height;
+	Direction facing;
 	Texture* texture;
+	int spriteSheetOffsetX;
+	int spriteSheetOffsetY;
 };
