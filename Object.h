@@ -24,7 +24,5 @@ protected:
 	double y;
 	int width;
 	int height;
-
-private:
 	Texture* texture;
 };

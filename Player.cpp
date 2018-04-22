@@ -13,6 +13,9 @@ Player::Player() : Object((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), PLAYER_TEXTUR
 	this->horizontalVelocity = 0;
 	this->verticalVelocity = 0;
 
+	this->spriteSheetOffsetX = 0;
+	this->spriteSheetOffsetY = 0;
+
 	this->hp = 100;
 	this->width = PLAYER_WIDTH;
 	this->height = PLAYER_HEIGHT;
@@ -60,6 +63,11 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 	}
 }
 
+void Player::Draw()
+{ 
+	Display::QueueTextureForRendering(this->texture, this->x, this->y, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
+}
+
 void Player::OnKeyDown(int key)
 {
 	switch (key)
@@ -67,18 +75,26 @@ void Player::OnKeyDown(int key)
 		case SDLK_w:
 		case SDLK_UP:
 			this->verticalVelocity -= PLAYER_VELOCITY;
+			this->spriteSheetOffsetX = BACK_X;
+			this->spriteSheetOffsetY = BACK_Y;
 			break;
 		case SDLK_s:
 		case SDLK_DOWN:
 			this->verticalVelocity += PLAYER_VELOCITY;
+			this->spriteSheetOffsetX = FRONT_X;
+			this->spriteSheetOffsetY = FRONT_Y;
 			break;
 		case SDLK_a:
 		case SDLK_LEFT:
 			this->horizontalVelocity -= PLAYER_VELOCITY;
+			this->spriteSheetOffsetX = LEFT_X;
+			this->spriteSheetOffsetY = LEFT_Y;
 			break;
 		case SDLK_d:
 		case SDLK_RIGHT:
 			this->horizontalVelocity += PLAYER_VELOCITY;
+			this->spriteSheetOffsetX = RIGHT_X;
+			this->spriteSheetOffsetY = RIGHT_Y;
 			break;
 	}
 
