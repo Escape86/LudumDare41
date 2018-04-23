@@ -131,8 +131,6 @@ void Display::InjectFrame()
 	SDL_SetRenderDrawColor(Display::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(Display::renderer);
 
-	SDL_SetRenderDrawColor(Display::renderer, 0x00, 0x00, 0x00, 0xFF);
-
 	//draw our queued up textures
 	for (std::vector<QueuedTexture>::iterator it = Display::textureQueue.begin(); it != Display::textureQueue.end(); ++it)
 	{
