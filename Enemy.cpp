@@ -11,7 +11,7 @@
 Enemy::Enemy(int id, double spawnX, double spawnY, int width, int height, std::string texturePath, int spriteSheetOffsetX, int spriteSheetOffsetY, bool shouldIdleMove)
 	: Spawn(id, spawnX, spawnY, width, height, texturePath, spriteSheetOffsetX, spriteSheetOffsetY, shouldIdleMove)
 {
-
+	this->hp = ENEMY_HP;
 }
 
 #pragma endregion
@@ -54,6 +54,41 @@ void Enemy::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrame
 	else if (this->y < targetY)
 	{
 		this->y += movementVelocity;
+	}
+}
+void Enemy::OnHitByPlayerAttack()
+{
+	this->hp--;
+}
+
+int Enemy::GetHP()
+{
+	return this->hp;
+}
+
+void Enemy::DoRecoil(Direction attackerIsFacing)
+{
+	//bounce back to show recoil
+	switch (attackerIsFacing)
+	{
+	case Direction::UP:
+		this->y -= ATTACK_RECOIL_AMOUNT;
+		break;
+	case Direction::DOWN:
+		this->y += ATTACK_RECOIL_AMOUNT;
+		break;
+	case Direction::LEFT:
+		this->x -= ATTACK_RECOIL_AMOUNT;
+		break;
+	case Direction::RIGHT:
+		this->x += ATTACK_RECOIL_AMOUNT;
+		break;
+
+	default:
+#if _DEBUG
+		assert(false);	//wtf direction?
+#endif
+		break;
 	}
 }
 

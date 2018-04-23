@@ -186,6 +186,16 @@ void Display::InjectFrame()
 
 		delete t;
 	}
+	//don't clear queued text because their life is manually controlled rather than create/destroy every frame
+
+	//render queued rectangles
+	for (std::vector<QueuedRectangle>::iterator it = Display::rectangleQueue.begin(); it != Display::rectangleQueue.end(); ++it)
+	{
+		SDL_Rect r = { it->x, it->y, it->width, it->height };
+		SDL_SetRenderDrawColor(Display::renderer, it->color.r, it->color.g, it->color.b, 0xFF);
+		SDL_RenderFillRect(Display::renderer, &r);
+	}
+	Display::rectangleQueue.clear();
 
 	//Update screen
 	SDL_RenderPresent(Display::renderer);
@@ -204,6 +214,11 @@ SDL_Renderer* const Display::GetRenderer()
 void Display::QueueTextureForRendering(Texture* const texture, int x, int y, int width, int height, bool shiftToCenterPoint, bool isSpriteSheet /*=false*/, int spriteSheetOffsetX /*=0*/, int spriteSheetOffsetY /*=0*/)
 {
 	Display::textureQueue.push_back({ texture, x, y, width, height, shiftToCenterPoint, isSpriteSheet, spriteSheetOffsetX, spriteSheetOffsetY });
+}
+
+void Display::QueueRectangleForRendering(int x, int y, int width, int height, unsigned char r, unsigned char g, unsigned char b)
+{
+	Display::rectangleQueue.push_back({ x, y, width, height, SDL_Color { r, g, b} });
 }
 
 TTF_Font* const Display::GetFont(FontSize size)
@@ -307,6 +322,7 @@ std::map<Display::FontSize, TTF_Font*> Display::fonts;
 std::function<void(SDL_Event e)> Display::eventCallback;
 SDL_Joystick* Display::gameController = nullptr;
 std::vector<Display::QueuedTexture> Display::textureQueue;
+std::vector<Display::QueuedRectangle> Display::rectangleQueue;
 std::vector<Display::QueuedText> Display::textQueue;
 int Display::textControlIdCounter = 0;
 

@@ -12,6 +12,9 @@ public:
 	enum AudioTracks
 	{
 		//add entry to file path mapping when adding track to enum
+		ENEMY_WAS_ATTACKED,
+		PLAYER_WAS_ATTACKED,
+		ENEMY_DIED
 	};
 
 	static bool Initialize();

@@ -24,6 +24,7 @@ public:
 
 	static SDL_Renderer* const GetRenderer();
 	static void QueueTextureForRendering(Texture* const texture, int x, int y, int width, int height, bool shiftToCenterPoint, bool isSpriteSheet = false, int spriteSheetOffsetX = 0, int spriteSheetOffsetY = 0);
+	static void QueueRectangleForRendering(int x, int y, int width, int height, unsigned char r, unsigned char g, unsigned char b);
 
 	enum FontSize
 	{
@@ -76,6 +77,16 @@ private:
 		int spriteSheetOffsetY;
 	};
 	static std::vector<QueuedTexture> textureQueue;
+
+	struct QueuedRectangle
+	{
+		int x;
+		int y;
+		int width;
+		int height;
+		SDL_Color color;
+	};
+	static std::vector<QueuedRectangle> rectangleQueue;
 
 	static std::vector<QueuedText> textQueue;
 };

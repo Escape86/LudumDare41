@@ -87,18 +87,15 @@ void Game::InjectFrame()
 
 	if (this->player)
 	{
-		//check health for gameover condition
+		//check hp to see if player died
 		const int hp = this->player->GetHp();
 		if (hp <= 0)
 		{
-			//player died!
-			throw("TODO: HANDLE player died CONDITION HERE!");
-			return;
+			//player died! send them back to moon spawn
+			this->player->SetPosition(96, 1344);
+			this->player->SetHp(PLAYER_MAX_HP);
 		}
-	}
 
-	if (this->player)
-	{
 		//update player
 		this->player->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
 
@@ -118,9 +115,46 @@ void Game::InjectFrame()
 		spawn->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
 	}
 
-	for (Enemy* enemy : this->enemies)
+	const SDL_Rect* playerAttackHitBox = this->player->GetPlayerAttackHitBox();
+	for (std::vector<Enemy*>::iterator it = this->enemies.begin(); it != this->enemies.end();)
 	{
+		Enemy* enemy = *it;
 		enemy->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
+
+		//is player currently attacking?
+		if (playerAttackHitBox)
+		{
+			//check if was attacked
+			if (enemy->TestCollisionWithRect(playerAttackHitBox))
+			{
+				enemy->OnHitByPlayerAttack();
+				enemy->DoRecoil(this->player->GetFacing());
+				Audio::PlayAudio(Audio::AudioTracks::ENEMY_WAS_ATTACKED);
+			}
+		}
+
+		//did our player and this enemy collide?
+		if (enemy->TestCollision(this->player))
+		{
+			//yup, punish the player!
+			int playerHP = this->player->GetHp();
+			this->player->SetHp(playerHP - 1);
+			enemy->DoRecoil(this->player->GetFacing());
+			Audio::PlayAudio(Audio::AudioTracks::PLAYER_WAS_ATTACKED);
+		}
+
+		//should enemy die?
+		if (enemy->GetHP() <= 0)
+		{
+			Audio::PlayAudio(Audio::AudioTracks::ENEMY_DIED);
+
+			delete enemy;
+			it = this->enemies.erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 
 	//Center the camera over the player
@@ -216,6 +250,9 @@ void Game::InjectKeyDown(int key)
 					break;
 				}
 			}
+
+			//nope, just send the message on to the player class and let them handle it (maybe it's combat attacks?)
+			this->player->OnKeyDown(key);
 		}
 	}
 }

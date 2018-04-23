@@ -102,6 +102,61 @@ bool Object::TestCollision(Object* otherObject)
 	return true;
 }
 
+bool Object::TestCollisionWithRect(const SDL_Rect* thing)
+{
+#if _DEBUG
+	assert(this->width);
+	assert(this->height);
+#endif
+
+	const int thisHalfWidth = this->width / 2;
+	const int thisHalfHeight = this->height / 2;
+	const int otherHalfWidth = thing->w / 2;
+	const int otherHalfHeight = thing->h / 2;
+
+	//The sides of the rectangles
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	//Calculate the sides of rect A
+	leftA = this->x - thisHalfWidth;
+	rightA = this->x + thisHalfWidth;
+	topA = this->y - thisHalfHeight;
+	bottomA = this->y + thisHalfHeight;
+
+	//Calculate the sides of rect B
+	leftB = thing->x - otherHalfWidth;
+	rightB = thing->x + otherHalfWidth;
+	topB = thing->y - otherHalfHeight;
+	bottomB = thing->y + otherHalfHeight;
+
+	//If any of the sides from A are outside of B
+	if (bottomA <= topB)
+	{
+		return false;
+	}
+
+	if (topA >= bottomB)
+	{
+		return false;
+	}
+
+	if (rightA <= leftB)
+	{
+		return false;
+	}
+
+	if (leftA >= rightB)
+	{
+		return false;
+	}
+
+	//If none of the sides from A are outside B
+	return true;
+}
+
 void Object::SetTexture(std::string texturePath)
 {
 	if (this->texture)
@@ -131,6 +186,11 @@ void Object::SetPosition(double x, double y)
 {
 	this->x = x;
 	this->y = y;
+}
+
+Direction Object::GetFacing()
+{
+	return this->facing;
 }
 
 #pragma endregion

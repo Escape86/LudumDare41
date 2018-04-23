@@ -21,7 +21,7 @@ Player::Player() : Object(PLAYER_WIDTH + 150, PLAYER_HEIGHT + 150, PLAYER_WIDTH,
 	this->spriteSheetOffsetX = 0;
 	this->spriteSheetOffsetY = 0;
 
-	this->hp = 100;
+	this->hp = PLAYER_MAX_HP;
 
 	//prevent level switching from causing keyups to occur without a corresponding keydown
 	this->keydownPrimed = false;
@@ -29,6 +29,11 @@ Player::Player() : Object(PLAYER_WIDTH + 150, PLAYER_HEIGHT + 150, PLAYER_WIDTH,
 	// animation switch bool
 	this->animationFlag = false;
 	this->animationSwapCooldown = 0;
+
+	this->isAttacking = false;
+	this->attackDurationRemaining = 0.0f;
+	this->attackCooldownRemaining = 0.0f;
+	this->attackHitBox = nullptr;
 }
 
 #pragma endregion
@@ -103,6 +108,27 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 	{
 		this->animationSwapCooldown -= previousFrameTime;
 	}
+
+	if (this->isAttacking)
+	{
+		if (this->attackDurationRemaining > 0.0f)
+		{
+			this->attackDurationRemaining -= previousFrameTimeInSeconds;
+		}
+		else
+		{
+			this->isAttacking = false;
+			this->attackHitBox = nullptr;
+			this->attackCooldownRemaining = PLAYER_ATTACK_COOLDOWN;
+		}
+	}
+	else
+	{
+		if (this->attackCooldownRemaining > 0.0f)
+		{
+			this->attackCooldownRemaining -= previousFrameTimeInSeconds;
+		}
+	}
 }
 
 void Player::Draw()
@@ -113,6 +139,30 @@ void Player::Draw()
 	const SDL_Rect& camera = game->GetCamera();
 
 	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, this->width, this->height, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
+
+	if (this->isAttacking)
+	{
+		switch (this->facing)
+		{
+		case Direction::UP:
+			Display::QueueRectangleForRendering(this->x - camera.x + (this->width / 2) - 8, this->y - camera.y - PLAYER_ATTACK_LENGTH + 1, PLAYER_ATTACK_WIDTH, PLAYER_ATTACK_LENGTH, 0xFF, 0x00, 0x00);
+			break;
+		case Direction::DOWN:
+			Display::QueueRectangleForRendering(this->x - camera.x - 6, this->y + (this->height / 2) - camera.y - 5, PLAYER_ATTACK_WIDTH, PLAYER_ATTACK_LENGTH, 0xFF, 0x00, 0x00);
+			break;
+		case Direction::LEFT:
+			Display::QueueRectangleForRendering(this->x - (this->width / 2) - camera.x - PLAYER_ATTACK_LENGTH + 7, this->y - camera.y + 4, PLAYER_ATTACK_LENGTH, PLAYER_ATTACK_WIDTH, 0xFF, 0x00, 0x00);
+			break;
+		case Direction::RIGHT:
+			Display::QueueRectangleForRendering(this->x + (this->width / 2) - camera.x - 6, this->y - camera.y + 4, PLAYER_ATTACK_LENGTH, PLAYER_ATTACK_WIDTH, 0xFF, 0x00, 0x00);
+			break;
+		default:
+#if _DEBUG
+	assert(false);	//wtf direction?
+#endif
+			break;
+		}
+	}
 }
 
 void Player::OnKeyDown(int key)
@@ -139,9 +189,11 @@ void Player::OnKeyDown(int key)
 			this->horizontalVelocity += PLAYER_VELOCITY;
 			this->facing = Direction::RIGHT;
 			break;
+		case 32:
+			//attack
+			this->attack();
+			break;
 	}
-
-	//this->onDirectionChange();
 
 	//enforce velocity min/max values
 	if (this->verticalVelocity > PLAYER_VELOCITY)
@@ -212,6 +264,11 @@ int Player::GetHp()
 void Player::SetHp(int hp)
 {
 	this->hp = hp;
+}
+
+const SDL_Rect* Player::GetPlayerAttackHitBox()
+{
+	return this->attackHitBox;
 }
 
 #pragma endregion
@@ -309,6 +366,50 @@ void Player::updateSpriteSheetOffsets()
 #endif
 			break;
 		}
+	}
+}
+
+void Player::attack()
+{
+	if (this->attackCooldownRemaining > 0.0f)
+		return;
+
+	this->isAttacking = true;
+	this->attackDurationRemaining = PLAYER_ATTACK_DURATION;
+
+	this->attackHitBox = new SDL_Rect();
+
+	switch (this->facing)
+	{
+	case Direction::UP:
+		this->attackHitBox->x = this->x + (this->width / 2) - 8;
+		this->attackHitBox->y = this->y - PLAYER_ATTACK_LENGTH + 1;
+		this->attackHitBox->w = PLAYER_ATTACK_WIDTH;
+		this->attackHitBox->h = PLAYER_ATTACK_LENGTH;
+		break;
+	case Direction::DOWN:
+		this->attackHitBox->x = this->x - 6;
+		this->attackHitBox->y = this->y + (this->height / 2) - 5;
+		this->attackHitBox->w = PLAYER_ATTACK_WIDTH;
+		this->attackHitBox->h = PLAYER_ATTACK_LENGTH;
+		break;
+	case Direction::LEFT:
+		this->attackHitBox->x = this->x - (this->width / 2) - PLAYER_ATTACK_LENGTH + 7;
+		this->attackHitBox->y = this->y + 4;
+		this->attackHitBox->w = PLAYER_ATTACK_LENGTH;
+		this->attackHitBox->h = PLAYER_ATTACK_WIDTH;
+		break;
+	case Direction::RIGHT:
+		this->attackHitBox->x = this->x + (this->width / 2) - 6;
+		this->attackHitBox->y = this->y + 4;
+		this->attackHitBox->w = PLAYER_ATTACK_LENGTH;
+		this->attackHitBox->h = PLAYER_ATTACK_WIDTH;
+		break;
+	default:
+#if _DEBUG
+		assert(false);	//wtf direction?
+#endif
+		break;
 	}
 }
 

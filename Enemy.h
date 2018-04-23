@@ -11,6 +11,11 @@ public:
 
 	void InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime) override;
 
-private:
+	void OnHitByPlayerAttack();
 
+	int GetHP();
+	void DoRecoil(Direction attackerIsFacing);
+
+private:
+	int hp;
 };

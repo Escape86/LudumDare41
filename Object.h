@@ -4,6 +4,7 @@
 
 #pragma region Forward Declarations
 class Texture;
+struct SDL_Rect;
 #pragma endregion
 
 enum Direction
@@ -28,12 +29,15 @@ public:
 	virtual void Draw();
 
 	bool TestCollision(Object* otherObject);
+	bool TestCollisionWithRect(const SDL_Rect* thing);
 	void SetTexture(std::string texturePath);
 
 	double GetPositionX() const;
 	double GetPositionY() const;
 
 	void SetPosition(double x, double y);
+
+	Direction GetFacing();
 
 protected:
 	double x;

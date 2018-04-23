@@ -3,6 +3,10 @@
 #include "Object.h"
 #include "Constants.h"
 
+#pragma region Forward Declarations
+struct SDL_Rect;
+#pragma endregion
+
 class Player : public Object
 {
 public:
@@ -20,8 +24,11 @@ public:
 	int GetHp();
 	void SetHp(int hp);
 
+	const SDL_Rect* GetPlayerAttackHitBox();
+
 private:
 	void updateSpriteSheetOffsets();
+	void attack();
 
 	int horizontalVelocity;
 	int verticalVelocity;
@@ -32,4 +39,9 @@ private:
 	bool animationFlag;
 
 	int animationSwapCooldown;
+
+	bool isAttacking;
+	float attackDurationRemaining;
+	float attackCooldownRemaining;
+	SDL_Rect* attackHitBox;
 };

@@ -3,6 +3,9 @@
 #pragma region Filepaths
 #define PLAYER_TEXTURE_PATH				"resources/player.png"
 #define FONT_FILEPATH					"resources/Fonts/Orbitron/Orbitron-Regular.ttf"
+#define ENEMY_WAS_ATTACKED_WAVE_FILEPATH "resources/Audio/EnemyWasHit.wav"
+#define PLAYER_WAS_ATTACKED_WAVE_FILEPATH "resources/Audio/PlayerWasHit.wav"
+#define ENEMY_DIED_WAVE_FILEPATH		"resources/Audio/EnemyDied.wav"
 #pragma endregion
 
 #pragma region Colors
@@ -33,6 +36,16 @@
 #define NPC_IDLEMOVEMENT_COOLDOWN		1200	//in milliseconds
 
 #define ENEMY_VELOCITY					50
+
+#define PLAYER_ATTACK_LENGTH			25
+#define PLAYER_ATTACK_WIDTH				2
+#define PLAYER_ATTACK_DURATION			0.07
+#define PLAYER_ATTACK_COOLDOWN			0.3
+
+#define PLAYER_MAX_HP					6
+#define ENEMY_HP						3
+
+#define ATTACK_RECOIL_AMOUNT			45
 
 #define CHAT_POS_1						SCREEN_HEIGHT * .41 + 5
 #define CHAT_POS_2						SCREEN_HEIGHT * .45 + 4

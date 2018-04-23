@@ -48,4 +48,7 @@ std::map<Audio::AudioTracks, Mix_Chunk*> Audio::audioTrackData;
 std::map<Audio::AudioTracks, const char*> AudioTrackToFilePathMapping =
 {
 	//add file paths here!
+	{ Audio::AudioTracks::ENEMY_WAS_ATTACKED, ENEMY_WAS_ATTACKED_WAVE_FILEPATH },
+	{ Audio::AudioTracks::PLAYER_WAS_ATTACKED, PLAYER_WAS_ATTACKED_WAVE_FILEPATH },
+	{ Audio::AudioTracks::ENEMY_DIED, ENEMY_DIED_WAVE_FILEPATH },
 };
