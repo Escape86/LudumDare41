@@ -45,6 +45,16 @@ int main(int argc, char* args[])
 					game->InjectControllerStickMovement(e.jaxis.axis, e.jaxis.value);
 				}
 				break;
+			case SDL_JOYBUTTONDOWN:
+			{
+				game->InjectKeyDown(32);
+			}
+				break;
+			case SDL_JOYBUTTONUP:
+			{
+				game->InjectKeyUp(32);
+			}
+				break;
 			case SDL_QUIT:
 				keepRunning = false;
 			break;

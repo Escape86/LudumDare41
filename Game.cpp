@@ -96,11 +96,6 @@ void Game::InjectFrame()
 		}
 	}
 
-	for (Spawn* spawn : this->spawns)
-	{
-		spawn->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
-	}
-
 	if (this->player)
 	{
 		//update player
@@ -115,6 +110,11 @@ void Game::InjectFrame()
 				this->mapSwitchRequested = true;
 			}
 		}
+	}
+
+	for (Spawn* spawn : this->spawns)
+	{
+		spawn->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
 	}
 
 	//Center the camera over the player
@@ -163,20 +163,74 @@ void Game::InjectFrame()
 
 void Game::InjectKeyDown(int key)
 {
-	if (this->player)
+	//don't do any actions if we don't even have a player spawned
+	if (!this->player)
+		return;
+
+	//ignore player movement while in the middle of a chat event
+	if (!this->isInChatEvent)
+	{
 		this->player->OnKeyDown(key);
+	}
+
+	//spacebar means action button was pressed
+	if (key == 32)
+	{
+		//are we currently chatting?
+		if (this->isInChatEvent)
+		{
+			//advance chat or clear chat event if we're done chatting
+			for (int i = 0; i < 2; i++)
+			{
+				Display::RemoveText(this->chatTextIds[i]);	//ignore return bool it just means if it found the requested text or not
+			}
+			this->isInChatEvent = false;
+		}
+		else
+		{
+			//check if player is colliding with the spawn (may indicate an interaction request)
+			for (Spawn* spawn : this->spawns)
+			{
+				if (spawn->TestCollision(this->player))
+				{
+					//yes, do handle the interaction!
+					this->chatTextIds[0] = Display::CreateText("hi there", 12, CHAT_POS_1, Display::TWENTY, true);
+					this->isInChatEvent = true;
+
+					//fake all keys being released
+					this->player->OnKeyUp(SDLK_UP);
+					this->player->OnKeyUp(SDLK_DOWN);
+					this->player->OnKeyUp(SDLK_LEFT);
+					this->player->OnKeyUp(SDLK_RIGHT);
+					break;
+				}
+			}
+		}
+	}
 }
 
 void Game::InjectKeyUp(int key)
 {
-	if (this->player)
+	if (!this->player)
+		return;
+
+	//ignore player movement while in the middle of a chat event
+	if (!this->isInChatEvent)
+	{
 		this->player->OnKeyUp(key);
+	}
 }
 
 void Game::InjectControllerStickMovement(unsigned char axis, short value)
 {
 	if (!this->player)
 		return;
+
+	//ignore player movement while in the middle of a chat event
+	if (this->isInChatEvent)
+	{
+		return;
+	}
 
 	//X axis motion
 	if (axis == 0)

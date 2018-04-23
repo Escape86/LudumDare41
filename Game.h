@@ -41,6 +41,9 @@ private:
 	std::vector<Spawn*> spawns;
 	std::vector<Teleporter*> teleporters;
 
+	bool isInChatEvent;
+	int chatTextIds[2] = { -1, -1 };
+
 	Destination destinationMapSwitch;
 	bool mapSwitchRequested;
 
