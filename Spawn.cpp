@@ -104,8 +104,12 @@ void Spawn::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrame
 		int halfHeight = this->height / 2;
 
 		const Game* game = Game::GetInstance();
-		const int mapWidth = game->GetMap()->GetColumnCount() * TILE_WIDTH;
-		const int mapHeight = game->GetMap()->GetRowCount() * TILE_HEIGHT;
+		const Map* map = game->GetMap();
+#if _DEBUG
+	assert(map);
+#endif
+		const int mapWidth = map->GetColumnCount() * TILE_WIDTH;
+		const int mapHeight = map->GetRowCount() * TILE_HEIGHT;
 
 		if (this->x - halfWidth < 0)
 		{
