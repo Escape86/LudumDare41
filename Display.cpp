@@ -178,7 +178,6 @@ void Display::InjectFrame()
 	{
 		if (!it->isVisible || it->text.empty())
 			continue;
-
 	
 		Texture* t = Texture::CreateFromText(it->text, it->textColor, it->fontsize);
 		
