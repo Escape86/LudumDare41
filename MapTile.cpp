@@ -42,6 +42,16 @@ std::map<int, TileInfo> tileIdToInfoLookup		// { id, { spriteSheetRowOffset, spr
 	{ 29, { 9,  2, false } },
 	{ 30, { 10, 0, false } },
 	{ 31, { 10, 1, false } },
+	{ 32, { 10, 2, false } },
+	{ 33, { 11, 0, true } },
+	{ 34, { 11, 1, true } },
+	{ 35, { 11, 2, true } },
+	{ 36, { 12, 0, true } },
+	{ 37, { 12, 1, true } },
+	{ 38, { 12, 2, true } },
+	{ 39, { 13, 0, false } },
+	{ 30, { 13, 1, false } },
+	{ 41, { 13, 2, false } },
 };
 
 #pragma region Constructor
