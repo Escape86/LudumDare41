@@ -114,9 +114,6 @@ bool Display::ShutDown()
 	return true;
 }
 
-int Display::yoloX;
-int Display::yoloY;
-
 void Display::InjectFrame()
 {
 	//Handle events on queue
@@ -189,10 +186,6 @@ void Display::InjectFrame()
 
 		delete t;
 	}
-
-	SDL_Rect chatBox = { yoloX - 12, yoloY - 12, 24, 24 };
-	SDL_SetRenderDrawColor(Display::GetRenderer(), 0x00, 0x00, 0xFF, 0xFF);
-	SDL_RenderFillRect(Display::GetRenderer(), &chatBox);
 
 	//Update screen
 	SDL_RenderPresent(Display::renderer);

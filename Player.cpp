@@ -44,8 +44,8 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 
 	double startPosX = this->x;
 	double startPosY = this->y;
-	int startTileRow = static_cast<int>((this->y - (PLAYER_HEIGHT / 2)) / TILE_HEIGHT);
-	int startTileColumn = static_cast<int>((this->x - (PLAYER_WIDTH / 2)) / TILE_WIDTH);
+	int startTileRow = static_cast<int>((this->y + (this->height / 2)) / TILE_HEIGHT);
+	int startTileColumn = static_cast<int>((this->x + (this->width / 2)) / TILE_WIDTH);
 
 	//update position
 	this->x += (this->horizontalVelocity * previousFrameTimeInSeconds);
@@ -78,8 +78,8 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 	}
 
 	//check if we're attempting to cross to a new tile that isn't walkable
-	int endTileRow = static_cast<int>((this->y - (PLAYER_HEIGHT / 2)) / TILE_HEIGHT);
-	int endTileColumn = static_cast<int>((this->x - (PLAYER_WIDTH / 2)) / TILE_WIDTH);
+	int endTileRow = static_cast<int>((this->y + (this->height / 2)) / TILE_HEIGHT);
+	int endTileColumn = static_cast<int>((this->x + (this->width / 2)) / TILE_WIDTH);
 
 	if (startTileRow != endTileRow || startTileColumn != endTileColumn)
 	{
@@ -102,8 +102,6 @@ void Player::Draw()
 	const SDL_Rect& camera = game->GetCamera();
 
 	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, this->width, this->height, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
-	Display::yoloX = this->x - camera.x;
-	Display::yoloY = this->y - camera.y;
 }
 
 void Player::OnKeyDown(int key)

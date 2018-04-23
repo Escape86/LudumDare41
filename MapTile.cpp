@@ -50,7 +50,7 @@ std::map<int, TileInfo> tileIdToInfoLookup		// { id, { spriteSheetRowOffset, spr
 	{ 37, { 12, 1, true } },
 	{ 38, { 12, 2, true } },
 	{ 39, { 13, 0, false } },
-	{ 30, { 13, 1, false } },
+	{ 40, { 13, 1, true } },
 	{ 41, { 13, 2, false } },
 };
 
@@ -73,7 +73,7 @@ MapTile::~MapTile()
 
 void MapTile::Draw(Texture* texture, int cameraShiftX, int cameraShiftY)
 {
-	Display::QueueTextureForRendering(texture, (this->worldGridColumn * TILE_WIDTH) - cameraShiftX, (this->worldGridRow * TILE_HEIGHT) - cameraShiftY, TILE_WIDTH, TILE_HEIGHT, false, true, tileIdToInfoLookup[this->id].spriteSheetColumnOffset * TILE_WIDTH, tileIdToInfoLookup[this->id].spriteSheetRowOffset * TILE_HEIGHT);
+	Display::QueueTextureForRendering(texture, (this->worldGridColumn * TILE_WIDTH) - (TILE_WIDTH / 2) - cameraShiftX, (this->worldGridRow * TILE_HEIGHT) - (TILE_HEIGHT / 2) - cameraShiftY, TILE_WIDTH, TILE_HEIGHT, false, true, tileIdToInfoLookup[this->id].spriteSheetColumnOffset * TILE_WIDTH, tileIdToInfoLookup[this->id].spriteSheetRowOffset * TILE_HEIGHT);
 }
 
 int MapTile::GetWorldGridRow() const

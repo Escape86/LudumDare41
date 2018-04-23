@@ -112,17 +112,17 @@ void Game::InjectFrame()
 	{
 		camera.x = 0;
 	}
-	else if ((camera.x + (camera.w / 2)) > mapWidth)
+	else if ((camera.x + (camera.w / 2)) > (mapWidth - (TILE_WIDTH / 2)))
 	{
-		camera.x = mapWidth - (camera.w / 2);
+		camera.x = mapWidth - (camera.w / 2) - (TILE_WIDTH / 2);
 	}
 	if (camera.y < 0)
 	{
 		camera.y = 0;
 	}
-	else if ((camera.y + (camera.h / 2)) > mapHeight)
+	else if ((camera.y + (camera.h / 2)) > (mapHeight - (TILE_HEIGHT / 2)))
 	{
-		camera.y = mapHeight - (camera.h / 2);
+		camera.y = mapHeight - (camera.h / 2) - (TILE_HEIGHT / 2);
 	}
 
 	//now that updates are done, draw the frame

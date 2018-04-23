@@ -126,8 +126,8 @@ void Spawn::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrame
 		}
 
 		//check if we're attempting to cross to a new tile that isn't walkable
-		int endTileRow = static_cast<int>((this->y - (PLAYER_HEIGHT / 2)) / TILE_HEIGHT);
-		int endTileColumn = static_cast<int>((this->x - (PLAYER_WIDTH / 2)) / TILE_WIDTH);
+		int endTileRow = static_cast<int>((this->y - (this->height / 2)) / TILE_HEIGHT);
+		int endTileColumn = static_cast<int>((this->x - (this->width / 2)) / TILE_WIDTH);
 
 		if (startTileRow != endTileRow || startTileColumn != endTileColumn)
 		{
