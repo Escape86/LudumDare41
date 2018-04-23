@@ -2,8 +2,5 @@
 -- XPos, YPos, DestinationMapFilePath, DestinationMapTextureFilePath, DestinationSpawnsFilePath, DestinationTeleportersFilePath, DestinationX, DestinationY	--
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---western infront of saloon
-192, 207, resources/western.csv, resources/western.png, resources/western_spawns.txt, resources/western_teleporters.txt, 336, 984));
-
---pisser
-288, 90, resources/pisser.csv, resources/Interior.png, resources/pisser_spawns.txt, resources/pisser_teleporters.txt, 264, 160));
+--send back to saloon
+264, 175, resources/saloon.csv, resources/Interior.png, resources/saloon_spawns.txt, resources/saloon_teleporters.txt, 288, 110));

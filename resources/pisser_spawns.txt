@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------------------------------------------
+-- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
+--------------------------------------------------------------------------------------------------------------------
+
+--drunk guy
+0, 120, 165.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 120, false, false
