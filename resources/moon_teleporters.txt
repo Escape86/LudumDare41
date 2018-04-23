@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- XPos, YPos, DestinationMapFilePath, DestinationMapTextureFilePath, DestinationSpawnsFilePath, DestinationTeleportersFilePath, DestinationX, DestinationY	--
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--western infront of the cat house
+336, 24, resources/western.csv, resources/western.png, resources/western_spawns.txt, resources/western_teleporters.txt, 552, 1152));

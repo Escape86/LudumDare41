@@ -13,3 +13,6 @@
 
 --bank
 785, 1047, resources/bank.csv, resources/Interior.png, resources/bank_spawns.txt, resources/bank_teleporters.txt, 192, 192));
+
+--under the bull
+1128, 1296, resources/moon.csv, resources/Moon.png, resources/moon_spawns.txt, resources/moon_teleporters.txt, 96, 1344));

@@ -214,6 +214,47 @@ std::map<int, TileInfo> saloonTileIdToInfoLookup		// { id, { spriteSheetRowOffse
 	{ 35,{ 5, 5, false } },
 };
 
+std::map<int, TileInfo> moonTileIdToInfoLookup		// { id, { spriteSheetRowOffset, spriteSheetColumnOffset, walkAble }}
+{
+	{ 0,{ 0, 0, true } },
+	{ 1,{ 0, 1, false } },
+	{ 2,{ 0, 2, false } },
+	{ 3,{ 0, 3, false } },
+	{ 4,{ 0, 4, false } },
+	{ 5,{ 0, 5, false } },
+	{ 6,{ 1, 0, false } },
+	{ 7,{ 1, 1, true } },
+	{ 8,{ 1, 2, true } },
+	{ 9,{ 1, 3, false } },
+	{ 10,{ 1, 4, false } },
+	{ 11,{ 1, 5, false } },
+	{ 12,{ 2, 0, true } },
+	{ 13,{ 2, 1, true } },
+	{ 14,{ 2, 2, true } },
+	{ 15,{ 2, 3, false } },
+	{ 16,{ 2, 4, false } },
+	{ 17,{ 2, 5, false } },
+	{ 18,{ 3, 0, false } },
+	{ 19,{ 3, 1, false } },
+	{ 20,{ 3, 2, false } },
+	{ 21,{ 3, 3, false } },
+	{ 22,{ 3, 4, false } },
+	{ 23,{ 3, 5, false } },
+	{ 24,{ 4, 0, false } },
+	{ 25,{ 4, 1, false } },
+	{ 26,{ 4, 2, false } },
+	{ 27,{ 4, 3, false } },
+	{ 28,{ 4, 4, false } },
+	{ 29,{ 4, 5, false } },
+	{ 30,{ 5, 0, false } },
+	{ 31,{ 5, 1, false } },
+	{ 32,{ 5, 2, false } },
+	{ 33,{ 5, 3, false } },
+	{ 34,{ 5, 4, false } },
+	{ 35,{ 5, 5, false } },
+
+};
+
 std::map<std::string, int> mapFileNameToMapUniqueIDLookup
 {
 	{ "resources/western.csv", 0 },
@@ -221,6 +262,7 @@ std::map<std::string, int> mapFileNameToMapUniqueIDLookup
 	{ "resources/cathouse.csv", 2 },
 	{ "resources/saloon.csv", 3 },
 	{ "resources/house_interrior.csv", 4 },
+	{ "resources/moon.csv", 5 },
 };
 
 std::map<int, std::map<int, TileInfo>> mapFileNameToTileIdToInfoLookup
@@ -230,6 +272,7 @@ std::map<int, std::map<int, TileInfo>> mapFileNameToTileIdToInfoLookup
 	{ 2, catHouseTileIdToInfoLookup },
 	{ 3, saloonTileIdToInfoLookup },
 	{ 4, houseInterriorTileIdToInfoLookup },
+	{ 5, moonTileIdToInfoLookup },
 };
 
 #pragma region Constructor
