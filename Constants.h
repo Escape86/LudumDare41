@@ -21,6 +21,9 @@
 #define TILE_WIDTH						24
 #define TILE_HEIGHT						24
 
+#define TELEPORTER_WIDTH				TILE_WIDTH
+#define TELEPORTER_HEIGHT				1		//1 so you have to slightly walk into the door/portal area to actually be teleported
+
 #define PLAYER_WIDTH					24
 #define PLAYER_HEIGHT					24
 

@@ -16,7 +16,7 @@ struct TileInfo
 class MapTile
 {
 public:
-	MapTile(const int id, const int worldGridRow, const int worldGridColumn);
+	MapTile(const std::string mapFileNameName, const int id, const int worldGridRow, const int worldGridColumn);
 	~MapTile();
 
 	void Draw(Texture* texture, int cameraShiftX, int cameraShiftY);
@@ -27,6 +27,7 @@ public:
 	bool GetIsWalkable() const;
 
 private:
+	int mapUniqueId;
 	const int id;
 	const int worldGridRow;
 	const int worldGridColumn;

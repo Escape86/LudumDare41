@@ -10,9 +10,10 @@
 
 #pragma region Constructor
 
-Map::Map(std::string tileDatafilePath, std::string textureFilepath)
+Map::Map(std::string tileDataFilePath, std::string textureFilepath)
 {
-	this->readDataFile(tileDatafilePath);
+	this->tileDataFilePath = tileDataFilePath;
+	this->readDataFile(tileDataFilePath);
 
 	this->texture = new Texture(textureFilepath);
 	bool loadSuccess = this->texture->Load();
@@ -105,7 +106,7 @@ void Map::readDataFile(const std::string& tileDatafilePath)
 		{
 			int id = atoi(token);
 			
-			MapTile* tile = new MapTile(id, this->rowCount, this->columnCount);
+			MapTile* tile = new MapTile(this->tileDataFilePath, id, this->rowCount, this->columnCount);
 			this->mapTiles.push_back(tile);
 
 			token = strtok_s(NULL, ",", &context);

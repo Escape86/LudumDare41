@@ -1,53 +1,39 @@
+#include "Teleporter.h"
 #include "Object.h"
-#include "Texture.h"
-#include "Display.h"
 
-#ifdef _DEBUG
+#if _DEBUG
 	#include <assert.h>
 #endif
 
 #pragma region Constructor
 
-Object::Object(double spawnX, double spawnY, int width, int height, std::string texturePath)
-	: width(width), height(height)
+Teleporter::Teleporter(int x, int y, int width, int height, std::string destinationMapFilePath, std::string destinationMapTextureFilePath, std::string destinationSpawnsFilePath, std::string destinationTeleportersFilePath, int destinationX, int destinationY)
 {
-#if _DEBUG
-	assert(this->width);
-	assert(this->height);
-#endif
-
-	this->x = spawnX;
-	this->y = spawnY;
-
-	this->SetTexture(texturePath);
-
-	// fix the rendering space
-	this->texture->SetRenderOffset(this->width / 2, this->height / 2);
+	this->x = x;
+	this->y = y;
+	this->width = width;
+	this->height = height;
+	this->destination = 
+	{
+		destinationMapFilePath,
+		destinationMapTextureFilePath,
+		destinationSpawnsFilePath,
+		destinationTeleportersFilePath,
+		destinationX,
+		destinationY
+	};
 }
 
 #pragma endregion
 
 #pragma region Public Methods
 
-Object::~Object()
+Teleporter::~Teleporter()
 {
-	if (this->texture)
-	{
-		delete this->texture;
-	}
+
 }
 
-void Object::Draw()
-{
-#if _DEBUG
-	assert(this->width);
-	assert(this->height);
-#endif
-
-	Display::QueueTextureForRendering(this->texture, this->x, this->y, this->width, this->height, true);
-}
-
-bool Object::TestCollision(Object* otherObject)
+bool Teleporter::TestCollision(Object* otherObject) const
 {
 #if _DEBUG
 	assert(this->width);
@@ -102,35 +88,9 @@ bool Object::TestCollision(Object* otherObject)
 	return true;
 }
 
-void Object::SetTexture(std::string texturePath)
+const Destination& Teleporter::GetDestination() const
 {
-	if (this->texture)
-	{
-		delete this->texture;
-	}
-
-	this->texture = new Texture(texturePath);
-	bool loadTextureResult = this->texture->Load();
-
-#if _DEBUG
-	assert(loadTextureResult);
-#endif
-}
-
-double Object::GetPositionX()
-{
-	return this->x;
-}
-
-double Object::GetPositionY()
-{
-	return this->y;
-}
-
-void Object::SetPosition(double x, double y)
-{
-	this->x = x;
-	this->y = y;
+	return this->destination;
 }
 
 #pragma endregion

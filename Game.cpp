@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Map.h"
 #include "Spawn.h"
+#include "Teleporter.h"
 #include <fstream>
 #include <algorithm>
 #include <time.h>
@@ -27,13 +28,14 @@ Game::Game()
 	this->player = new Player();
 	this->previousFrameEndTime = 0;
 
-	this->map = new Map("resources/western.csv", "resources/western.png");
-
-	bool spawnLoadResult = this->LoadSpawns("resources/western_spawns.txt");
-
+	//load western map initially
+	if (!this->SwitchMap("resources/western.csv", "resources/western.png", "resources/western_spawns.txt", "resources/western_teleporters.txt"))
+	{
 #if _DEBUG
-	assert(spawnLoadResult);
+	assert(false);	//FAILED TO LOAD MAP!
 #endif
+		exit(-1);
+	}
 
 	this->camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
@@ -48,22 +50,12 @@ Game::Game()
 
 Game::~Game()
 {
-	for (Spawn* spawn : this->spawns)
-	{
-		delete spawn;
-	}
-	this->spawns.clear();
+	this->cleanUpGameObjects();
 
 	if (this->player)
 	{
 		delete this->player;
 		this->player = nullptr;
-	}
-
-	if (this->map)
-	{
-		delete this->map;
-		this->map = nullptr;
 	}
 }
 
@@ -75,6 +67,20 @@ const Game* Game::GetInstance()
 void Game::InjectFrame()
 {
 	Uint32 elapsedTimeInMilliseconds = SDL_GetTicks();
+
+	if (this->mapSwitchRequested)
+	{
+		const Destination& destination = this->destinationMapSwitch;
+		if (this->SwitchMap(destination.destinationMapFilePath, destination.destinationMapTextureFilePath, destination.destinationSpawnsFilePath, destination.destinationTeleportersFilePath))
+		{
+			//move player to requested location in new map
+			this->player->SetPosition(destination.destinationX, destination.destinationY);
+
+			this->mapSwitchRequested = false;
+		}
+
+		return;
+	}
 
 	const unsigned int previousFrameTime = elapsedTimeInMilliseconds - this->previousFrameEndTime;
 
@@ -99,6 +105,16 @@ void Game::InjectFrame()
 	{
 		//update player
 		this->player->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
+
+		//check if in teleporter
+		for (const Teleporter* tp : this->teleporters)
+		{
+			if (tp->TestCollision(this->player))
+			{
+				this->destinationMapSwitch = tp->GetDestination();
+				this->mapSwitchRequested = true;
+			}
+		}
 	}
 
 	//Center the camera over the player
@@ -280,6 +296,120 @@ bool Game::LoadSpawns(std::string filepath)
 	return true;
 }
 
+bool Game::LoadTeleporters(std::string filepath)
+{
+	std::ifstream file(filepath.c_str());
+
+	if (!file.is_open())
+		return false;
+
+	std::string line;
+	while (std::getline(file, line))
+	{
+		if (line.length() < 2)
+			continue;
+
+		//skip comment lines
+		if (line[0] == '-' && line[1] == '-')
+			continue;
+
+		char* l = _strdup(line.c_str());
+
+		char* context = NULL;
+
+		char* xPosToken								= strtok_s(l, ",", &context);
+		char* yPosToken								= strtok_s(NULL, ",", &context);
+		char* destinationMapFilePathToken			= strtok_s(NULL, ",", &context);
+		char* destinationMapTextureFilePathToken	= strtok_s(NULL, ",", &context);
+		char* destinationSpawnsFilePathToken		= strtok_s(NULL, ",", &context);
+		char* destinationTeleportersFilePathToken	= strtok_s(NULL, ",", &context);
+		char* destinationXToken						= strtok_s(NULL, ",", &context);
+		char* destinationYToken						= strtok_s(NULL, ",", &context);
+
+		if ((xPosToken								== NULL) ||
+			(yPosToken								== NULL) ||
+			(destinationMapFilePathToken			== NULL) ||
+			(destinationMapTextureFilePathToken		== NULL) ||
+			(destinationSpawnsFilePathToken			== NULL) ||
+			(destinationTeleportersFilePathToken	== NULL) ||
+			(destinationXToken						== NULL) ||
+			(destinationYToken						== NULL))
+			return false;
+
+		int xPos = atoi(xPosToken);
+		int yPos = atof(yPosToken);
+		std::string destinationMapFilePath = destinationMapFilePathToken;
+		std::string destinationMapTextureFilePath = destinationMapTextureFilePathToken;
+		std::string destinationSpawnsFilePath = destinationSpawnsFilePathToken;
+		std::string destinationTeleportersFilePath = destinationTeleportersFilePathToken;
+		int destinationX = atoi(destinationXToken);
+		int destinationY = atoi(destinationYToken);
+
+		//clear whitespace from destinationMapFilePath
+		while (destinationMapFilePath.size() && isspace(destinationMapFilePath.front()))	//front
+			destinationMapFilePath.erase(destinationMapFilePath.begin());
+		while (destinationMapFilePath.size() && isspace(destinationMapFilePath.back()))	//back
+			destinationMapFilePath.pop_back();
+
+		//clear whitespace from destinationMapTextureFilePath
+		while (destinationMapTextureFilePath.size() && isspace(destinationMapTextureFilePath.front()))	//front
+			destinationMapTextureFilePath.erase(destinationMapTextureFilePath.begin());
+		while (destinationMapTextureFilePath.size() && isspace(destinationMapTextureFilePath.back()))	//back
+			destinationMapTextureFilePath.pop_back();
+
+		//clear whitespace from destinationSpawnsFilePath
+		while (destinationSpawnsFilePath.size() && isspace(destinationSpawnsFilePath.front()))	//front
+			destinationSpawnsFilePath.erase(destinationSpawnsFilePath.begin());
+		while (destinationSpawnsFilePath.size() && isspace(destinationSpawnsFilePath.back()))	//back
+			destinationSpawnsFilePath.pop_back();
+
+		//clear whitespace from destinationTeleportersFilePath
+		while (destinationTeleportersFilePath.size() && isspace(destinationTeleportersFilePath.front()))	//front
+			destinationTeleportersFilePath.erase(destinationTeleportersFilePath.begin());
+		while (destinationTeleportersFilePath.size() && isspace(destinationTeleportersFilePath.back()))	//back
+			destinationTeleportersFilePath.pop_back();
+
+		this->teleporters.push_back(new Teleporter(xPos, yPos, TELEPORTER_WIDTH, TELEPORTER_HEIGHT, destinationMapFilePath, destinationMapTextureFilePath, destinationSpawnsFilePath, destinationTeleportersFilePath, destinationX, destinationY));
+
+		free(l);
+	}
+
+	file.close();
+
+	return true;
+}
+
+bool Game::SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, std::string spawnsFilePath, std::string teleportersFilePath)
+{
+	//nuke any existing map stuff we have loaded so we can make a fresh start (and not leak memory)
+	this->cleanUpGameObjects();
+
+	this->map = new Map(mapFilePath, mapTextureFilePath);
+
+	if (!map)
+		return false;
+
+	bool spawnLoadResult = this->LoadSpawns(spawnsFilePath);
+
+#if _DEBUG
+	assert(spawnLoadResult);
+#endif
+
+	if (!spawnLoadResult)
+		return false;
+
+	bool loadTeleportersResult = this->LoadTeleporters(teleportersFilePath);
+
+#if _DEBUG
+	assert(loadTeleportersResult);
+#endif
+
+	if (!loadTeleportersResult)
+		return false;
+
+	return true;
+}
+
 const Map* Game::GetMap() const
 {
 	return this->map;
@@ -288,6 +418,31 @@ const Map* Game::GetMap() const
 const SDL_Rect& Game::GetCamera() const
 {
 	return this->camera;
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+
+void Game::cleanUpGameObjects()
+{
+	for (Teleporter* tp : this->teleporters)
+	{
+		delete tp;
+	}
+	this->teleporters.clear();
+
+	for (Spawn* spawn : this->spawns)
+	{
+		delete spawn;
+	}
+	this->spawns.clear();
+
+	if (this->map)
+	{
+		delete this->map;
+		this->map = nullptr;
+	}
 }
 
 #pragma endregion

@@ -17,6 +17,8 @@ enum Direction
 
 class Object
 {
+	friend class Teleporter;
+
 public:
 	Object(double spawnX, double spawnY, int width, int height, std::string texturePath);
 	virtual ~Object();
@@ -30,6 +32,8 @@ public:
 
 	double GetPositionX();
 	double GetPositionY();
+
+	void SetPosition(double x, double y);
 
 protected:
 	double x;

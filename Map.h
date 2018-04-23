@@ -11,7 +11,7 @@ class MapTile;
 class Map
 {
 public:
-	Map(std::string tileDatafilePath, std::string textureFilepath);
+	Map(std::string tileDataFilePath, std::string textureFilepath);
 	~Map();
 
 	void Draw(int cameraShiftX, int cameraShiftY);
@@ -23,6 +23,7 @@ public:
 private:
 	void readDataFile(const std::string& tileDatafilePath);
 
+	std::string tileDataFilePath;
 	int rowCount;
 	int columnCount;
 	Texture* texture;

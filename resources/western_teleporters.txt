@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- XPos, YPos, DestinationMapFilePath, DestinationMapTextureFilePath, DestinationSpawnsFilePath, DestinationTeleportersFilePath, DestinationX, DestinationY	--
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--bar
+326, 953,  resources/saloon.csv, resources/Interior.png, resources/saloon_spawns.txt, resources/saloon_teleporters.txt, 192, 192));
+
+--house interrior
+348, 300, resources/house_interrior.csv, resources/Interior.png, resources/house_interrior_spawns.txt, resources/house_interrior_teleporters.txt, 192, 192));
+
+--the cat house
+254, 1358, resources/cathouse.csv, resources/Interior.png, resources/cathouse_spawns.txt, resources/cathouse_teleporters.txt, 213, 210));
+
+--bank
+785, 1047, resources/bank.csv, resources/Interior.png, resources/bank_spawns.txt, resources/bank_teleporters.txt, 192, 192));

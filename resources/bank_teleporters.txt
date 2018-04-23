@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- XPos, YPos, DestinationMapFilePath, DestinationMapTextureFilePath, DestinationSpawnsFilePath, DestinationTeleportersFilePath, DestinationX, DestinationY	--
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--western infront of bank
+192, 207, resources/western.csv, resources/western.png, resources/western_spawns.txt, resources/western_teleporters.txt, 792, 1080));

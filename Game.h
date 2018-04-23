@@ -1,4 +1,5 @@
 #pragma once
+#include "Teleporter.h"
 #include "SDL_rect.h"
 #include <vector>
 
@@ -6,6 +7,7 @@
 class Player;
 class Map;
 class Spawn;
+class Teleporter;
 #pragma endregion
 
 class Game
@@ -23,14 +25,24 @@ public:
 	
 	bool LoadSpawns(std::string filepath);
 
+	bool LoadTeleporters(std::string filepath);
+
+	bool SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, std::string spawnsFilePath, std::string teleportersFilePath);
+
 	const Map* GetMap() const;
 	const SDL_Rect& GetCamera() const;
 
 private:
+	void cleanUpGameObjects();
+
 	Player* player;
 	Map* map;
 	SDL_Rect camera;
 	std::vector<Spawn*> spawns;
+	std::vector<Teleporter*> teleporters;
+
+	Destination destinationMapSwitch;
+	bool mapSwitchRequested;
 
 	unsigned int previousFrameEndTime;
 
