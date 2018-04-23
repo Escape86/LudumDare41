@@ -1,20 +1,25 @@
---------------------------------------------------------------------------------------------------------------------
--- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
---------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+-- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY, ShouldIdleMove, isEnemy	--
+--------------------------------------------------------------------------------------------------
 
 -- bull
-0, 996.0, 1161.0, 45, 45, resources/Animals_Sprite.png, 45, 0, false, false
+0, 1128.0, 1272.0, 45, 45, resources/Animals_Sprite.png, 45, 0, false, false
 
 ------CatHouse Ladies ------
 
---red dress
-1, 348.0, 1408.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 0, false, false
 --purple dress
-2, 312.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 0, true, false
---blue dress
-3, 168.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, true, false
+1, 312.0, 1392.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, false, false
+
 
 ------------------------------
 
--- Drunk guy by bar
-4, 280, 1000, 24, 24,  resources/TownsFolks_Sprite.png, 0, 48, false, false
+-- TownsfolkA -- Blue Shirt
+2, 288.0, 984.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 24, false, false
+-- TownsfolkB -- Green Shirt
+3, 576.0, 1152.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 24, false, false
+-- TownsfolkC Wandering -- Brown Shirt
+4, 768.0, 1080.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 24, true, false
+-- TownsfolkD Wandering -- Blue Shirt
+5, 744.0, 1200.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 24, true, false
+-- TownsfolkE -- Green Shirt
+6, 216.0, 1416.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 24, false, false

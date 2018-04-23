@@ -1,3 +1,14 @@
 --------------------------------------------------------------------------------------------------------------------
 -- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
 --------------------------------------------------------------------------------------------------------------------
+-- TownsfolkA -- Blue Shirt
+0, 288.0, 192.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 24, false, false
+-- TownsfolkB -- Green Shirt
+1, 192.0, 144.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 24, false, false
+-- TownsfolkC -- Brown Shirt
+2, 96.0, 168.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 24, false, false
+
+
+-----------Drunk Guy---------
+-- Monseur Billy
+5, 288.0, 103.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 48, false, false

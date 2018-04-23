@@ -1,3 +1,19 @@
 --------------------------------------------------------------------------------------------------------------------
 -- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
 --------------------------------------------------------------------------------------------------------------------
+------CatHouse Ladies ------
+
+--purple dress
+0, 216.0, 192.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 0, false, false
+
+--red dress
+1, 96.0, 144.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 0, false, false
+
+--blue dress A
+2, 288.0, 120.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, false, false
+
+--blue dress B
+3, 264.0, 168.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, false, false
+
+--blue dress C
+4, 192.0, 120.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, false, false

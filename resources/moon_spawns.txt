@@ -1,6 +1,37 @@
 --------------------------------------------------------------------------------------------------------------------
 -- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
 --------------------------------------------------------------------------------------------------------------------
+-- Red Alien A -- ALL MOVING
+0, 264.0, 1032.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien B -- ALL MOVING
+1, 384.0, 1032.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien C -- ALL MOVING
+2, 120.0, 864.0, 64, 64, resources/Alien_Green_Sprite.png, 0, 0, true, true
+-- Red Alien D -- ALL MOVING
+3, 144.0, 840.0, 64, 64, resources/Alien_Purple_Sprite.png, 0, 0, true, true
+-- Red Alien E -- ALL MOVING
+4, 480.0, 696.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien F -- ALL MOVING
+5, 480.0, 624.0, 64, 64, resources/Alien_Green_Sprite.png, 0, 0, true, true
+-- Red Alien G -- ALL MOVING
+6, 552.0, 624.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien H -- ALL MOVING
+7, 288.0, 432.0, 64, 64, resources/Alien_Green_Sprite.png, 0, 0, true, true
+-- Red Alien I -- ALL MOVING
+8, 360.0, 432.0, 64, 64, resources/Alien_Purple_Sprite.png, 0, 0, true, true
+-- Red Alien J -- ALL MOVING -- Guarding Cow
+9, 240.0, 144.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien K -- ALL MOVING -- Guarding Cow
+10, 288.0, 240.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien L -- ALL MOVING -- Guarding Cow
+11, 360.0, 240.0, 64, 64, resources/Alien_Green_Sprite.png, 0, 0, true, true
+-- Red Alien M -- ALL MOVING -- Guarding Cow
+12, 408.0, 192.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien N -- ALL MOVING -- Guarding Cow
+13, 456.0, 144.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
 
---enemy
-0, 200.0, 1000.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, false, true
+----- Specials at End of Level
+-- Alien Beer
+14, 336.0, 48.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 24, false, false
+-- Cow
+15, 336.0, 48.0, 45, 45, resources/Animals_Sprite.png, 0, 0, false, false

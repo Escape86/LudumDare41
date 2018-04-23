@@ -1,3 +1,7 @@
 --------------------------------------------------------------------------------------------------------------------
 -- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
 --------------------------------------------------------------------------------------------------------------------
+-- TownsfolkA -- Blue Shirt
+2, 192.0, 120.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 24, false, false
+-- TownsfolkB -- Green Shirt
+3, 192.0, 144.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 24, false, false
