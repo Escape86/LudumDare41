@@ -30,8 +30,8 @@ public:
 	bool TestCollision(Object* otherObject);
 	void SetTexture(std::string texturePath);
 
-	double GetPositionX();
-	double GetPositionY();
+	double GetPositionX() const;
+	double GetPositionY() const;
 
 	void SetPosition(double x, double y);
 

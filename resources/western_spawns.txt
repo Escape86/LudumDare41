@@ -1,17 +1,20 @@
-----------------------------------------------------------------------------------------
--- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY	--
-----------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+-- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
+--------------------------------------------------------------------------------------------------------------------
 
--- BULL
-0, 1156.0, 1313.0, 45, 45, resources/Animals_Sprite.png, 45, 0, false
+-- bull
+0, 996.0, 1161.0, 45, 45, resources/Animals_Sprite.png, 45, 0, false, false
 
 ------CatHouse Ladies ------
 
 --red dress
-1, 348.0, 1408.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 0, false
+1, 348.0, 1408.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 0, false, false
 --purple dress
-2, 312.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 0, true
+2, 312.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 0, true, false
 --blue dress
-3, 168.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, true
+3, 168.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, true, false
 
 ------------------------------
+
+-- Drunk guy by bar
+4, 280, 1000, 24, 24,  resources/TownsFolks_Sprite.png, 0, 48, false, false

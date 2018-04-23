@@ -117,12 +117,12 @@ void Object::SetTexture(std::string texturePath)
 #endif
 }
 
-double Object::GetPositionX()
+double Object::GetPositionX() const
 {
 	return this->x;
 }
 
-double Object::GetPositionY()
+double Object::GetPositionY() const
 {
 	return this->y;
 }

@@ -32,6 +32,8 @@
 #define NPC_VELOCITY					50
 #define NPC_IDLEMOVEMENT_COOLDOWN		1200	//in milliseconds
 
+#define ENEMY_VELOCITY					50
+
 #define CHAT_POS_1						SCREEN_HEIGHT * .41 + 5
 #define CHAT_POS_2						SCREEN_HEIGHT * .45 + 4
 

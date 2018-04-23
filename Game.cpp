@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "Spawn.h"
 #include "Teleporter.h"
+#include "Enemy.h"
 #include <fstream>
 #include <algorithm>
 #include <time.h>
@@ -117,6 +118,11 @@ void Game::InjectFrame()
 		spawn->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
 	}
 
+	for (Enemy* enemy : this->enemies)
+	{
+		enemy->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
+	}
+
 	//Center the camera over the player
 	camera.x = (this->player->GetPositionX() + PLAYER_WIDTH / 2) - SCREEN_WIDTH / (2 * RENDER_SCALE_AMOUNT);
 	camera.y = (this->player->GetPositionY() + PLAYER_HEIGHT / 2) - SCREEN_HEIGHT / (2 * RENDER_SCALE_AMOUNT);
@@ -150,6 +156,11 @@ void Game::InjectFrame()
 	for (Spawn* spawn : this->spawns)
 	{
 		spawn->Draw();
+	}
+
+	for (Enemy* enemy : this->enemies)
+	{
+		enemy->Draw();
 	}
 
 	if (this->player)
@@ -304,16 +315,18 @@ bool Game::LoadSpawns(std::string filepath)
 		char* spriteOffsetXToken	= strtok_s(NULL, ",", &context);
 		char* spriteOffsetYToken	= strtok_s(NULL, ",", &context);
 		char* shouldIdleMoveToken	= strtok_s(NULL, ",", &context);
+		char* isEnemyToken			= strtok_s(NULL, ",", &context);
 
-		if ((idToken			== NULL) ||
-			(spawnXToken		== NULL) ||
-			(spawnYToken		== NULL) ||
-			(widthToken			== NULL) ||
-			(heightToken		== NULL) ||
-			(texturePathToken	== NULL) ||
-			(spriteOffsetXToken == NULL) ||
-			(spriteOffsetYToken == NULL) ||
-			(shouldIdleMoveToken == NULL))
+		if ((idToken				== NULL) ||
+			(spawnXToken			== NULL) ||
+			(spawnYToken			== NULL) ||
+			(widthToken				== NULL) ||
+			(heightToken			== NULL) ||
+			(texturePathToken		== NULL) ||
+			(spriteOffsetXToken		== NULL) ||
+			(spriteOffsetYToken		== NULL) ||
+			(shouldIdleMoveToken	== NULL) ||
+			(isEnemyToken			== NULL))
 			return false;
 
 			int id = atoi(idToken);
@@ -334,14 +347,30 @@ bool Game::LoadSpawns(std::string filepath)
 			std::transform(shouldIdleMoveAsString.begin(), shouldIdleMoveAsString.end(), shouldIdleMoveAsString.begin(), ::tolower);
 			bool shouldIdleMove = shouldIdleMoveAsString.compare("true") == 0;
 
+			std::string isEnemyAsString(isEnemyToken);
+			//clear whitespace from isEnemyAsString
+			while (isEnemyAsString.size() && isspace(isEnemyAsString.front()))	//front
+				isEnemyAsString.erase(isEnemyAsString.begin());
+			while (isEnemyAsString.size() && isspace(isEnemyAsString.back()))	//back
+				isEnemyAsString.pop_back();
+			std::transform(isEnemyAsString.begin(), isEnemyAsString.end(), isEnemyAsString.begin(), ::tolower);
+			bool isEnemy = isEnemyAsString.compare("true") == 0;
+
 			//clear whitespace from texturePath
 			while (texturePath.size() && isspace(texturePath.front()))	//front
 				texturePath.erase(texturePath.begin());
 			while (texturePath.size() && isspace(texturePath.back()))	//back
 				texturePath.pop_back();
 
-			this->spawns.push_back(new Spawn(id, spawnX, spawnY, width, height, texturePath, spriteOffsetX, spriteOffsetY, shouldIdleMove));
-
+			if (isEnemy)
+			{
+				this->enemies.push_back(new Enemy(id, spawnX, spawnY, width, height, texturePath, spriteOffsetX, spriteOffsetY, shouldIdleMove));
+			}
+			else
+			{
+				this->spawns.push_back(new Spawn(id, spawnX, spawnY, width, height, texturePath, spriteOffsetX, spriteOffsetY, shouldIdleMove));
+			}
+			
 		free(l);
 	}
 
@@ -462,6 +491,11 @@ bool Game::SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, st
 		return false;
 
 	return true;
+}
+
+const Player* Game::GetPlayer() const
+{
+	return this->player;
 }
 
 const Map* Game::GetMap() const

@@ -8,6 +8,7 @@ class Player;
 class Map;
 class Spawn;
 class Teleporter;
+class Enemy;
 #pragma endregion
 
 class Game
@@ -29,6 +30,8 @@ public:
 
 	bool SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, std::string spawnsFilePath, std::string teleportersFilePath);
 
+	const Player* GetPlayer() const;
+
 	const Map* GetMap() const;
 	const SDL_Rect& GetCamera() const;
 
@@ -39,6 +42,7 @@ private:
 	Map* map;
 	SDL_Rect camera;
 	std::vector<Spawn*> spawns;
+	std::vector<Enemy*> enemies;
 	std::vector<Teleporter*> teleporters;
 
 	bool isInChatEvent;
