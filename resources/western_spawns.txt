@@ -1,3 +1,17 @@
-0, 200.0, 275.0, 45, 45, resources/Animals_Sprite.png, 0, 0
-1, 250.0, 300.0, 45, 45, resources/Animals_Sprite.png, 45, 0
-2, 500.0, 475.0, 45, 45, resources/Animals_Sprite.png, 0, 0
+----------------------------------------------------------------------------------------
+-- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY	--
+----------------------------------------------------------------------------------------
+
+-- BULL
+0, 1156.0, 1313.0, 45, 45, resources/Animals_Sprite.png, 45, 0, false
+
+------CatHouse Ladies ------
+
+--red dress
+1, 348.0, 1408.0, 24, 24, resources/TownsFolks_Sprite.png, 0, 0, false
+--purple dress
+2, 312.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 24, 0, true
+--blue dress
+3, 168.0, 1440.0, 24, 24, resources/TownsFolks_Sprite.png, 48, 0, true
+
+------------------------------

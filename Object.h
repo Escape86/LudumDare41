@@ -8,6 +8,7 @@ class Texture;
 
 enum Direction
 {
+	NONE = -1,
 	UP,
 	DOWN,
 	LEFT,

@@ -5,7 +5,7 @@
 class Spawn : public Object
 {
 public:
-	Spawn(int id, double spawnX, double spawnY, int width, int height, std::string texturePath, int spriteSheetOffsetX, int spriteSheetOffsetY);
+	Spawn(int id, double spawnX, double spawnY, int width, int height, std::string texturePath, int spriteSheetOffsetX, int spriteSheetOffsetY, bool shouldIdleMove);
 	~Spawn();
 
 	void InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime) override;
@@ -13,4 +13,8 @@ public:
 
 private:
 	const int id;
+
+	bool shouldIdleMove;
+	int idleMoveCooldown;
+	Direction idleDirection;
 };

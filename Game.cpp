@@ -6,6 +6,8 @@
 #include "Map.h"
 #include "Spawn.h"
 #include <fstream>
+#include <algorithm>
+#include <time.h>
 
 #if _DEBUG
 	#include <assert.h>
@@ -36,6 +38,8 @@ Game::Game()
 	this->camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	Game::_instance = this;
+
+	srand(time(NULL));	//seed our random number generation
 }
 
 #pragma endregion
@@ -210,7 +214,11 @@ bool Game::LoadSpawns(std::string filepath)
 	std::string line;
 	while (std::getline(file, line))
 	{
-		if (line.length() == 0)
+		if (line.length() < 2)
+			continue;
+
+		//skip comment lines
+		if (line[0] == '-' && line[1] == '-')
 			continue;
 
 		char* l = _strdup(line.c_str());
@@ -225,6 +233,7 @@ bool Game::LoadSpawns(std::string filepath)
 		char* texturePathToken		= strtok_s(NULL, ",", &context);
 		char* spriteOffsetXToken	= strtok_s(NULL, ",", &context);
 		char* spriteOffsetYToken	= strtok_s(NULL, ",", &context);
+		char* shouldIdleMoveToken	= strtok_s(NULL, ",", &context);
 
 		if ((idToken			== NULL) ||
 			(spawnXToken		== NULL) ||
@@ -233,7 +242,8 @@ bool Game::LoadSpawns(std::string filepath)
 			(heightToken		== NULL) ||
 			(texturePathToken	== NULL) ||
 			(spriteOffsetXToken == NULL) ||
-			(spriteOffsetYToken == NULL))
+			(spriteOffsetYToken == NULL) ||
+			(shouldIdleMoveToken == NULL))
 			return false;
 
 			int id = atoi(idToken);
@@ -245,13 +255,22 @@ bool Game::LoadSpawns(std::string filepath)
 			int spriteOffsetX = atoi(spriteOffsetXToken);
 			int spriteOffsetY = atoi(spriteOffsetYToken);
 
+			std::string shouldIdleMoveAsString(shouldIdleMoveToken);
+			//clear whitespace from shouldIdleMoveAsString
+			while (shouldIdleMoveAsString.size() && isspace(shouldIdleMoveAsString.front()))	//front
+				shouldIdleMoveAsString.erase(shouldIdleMoveAsString.begin());
+			while (shouldIdleMoveAsString.size() && isspace(shouldIdleMoveAsString.back()))	//back
+				shouldIdleMoveAsString.pop_back();
+			std::transform(shouldIdleMoveAsString.begin(), shouldIdleMoveAsString.end(), shouldIdleMoveAsString.begin(), ::tolower);
+			bool shouldIdleMove = shouldIdleMoveAsString.compare("true") == 0;
+
 			//clear whitespace from texturePath
 			while (texturePath.size() && isspace(texturePath.front()))	//front
 				texturePath.erase(texturePath.begin());
 			while (texturePath.size() && isspace(texturePath.back()))	//back
 				texturePath.pop_back();
 
-			this->spawns.push_back(new Spawn(id, spawnX, spawnY, width, height, texturePath, spriteOffsetX, spriteOffsetY));
+			this->spawns.push_back(new Spawn(id, spawnX, spawnY, width, height, texturePath, spriteOffsetX, spriteOffsetY, shouldIdleMove));
 
 		free(l);
 	}
