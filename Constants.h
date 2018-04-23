@@ -33,4 +33,4 @@
 
 #define JOYSTICK_DEAD_ZONE				8000
 
-#define WINDOW_TITLE					"CowHunt"
+#define WINDOW_TITLE					"Trebek's Alien RoundUp"
