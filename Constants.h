@@ -25,6 +25,7 @@
 #define PLAYER_HEIGHT					24
 
 #define PLAYER_VELOCITY					275
+#define PLAYER_ANIMATION_COOLDOWN		85
 #define NPC_VELOCITY					50
 #define NPC_IDLEMOVEMENT_COOLDOWN		1200	//in milliseconds
 

@@ -27,7 +27,8 @@ Player::Player() : Object(PLAYER_WIDTH + 150, PLAYER_HEIGHT + 150, PLAYER_WIDTH,
 	this->keydownPrimed = false;
 
 	// animation switch bool
-	animationFlag = false;
+	this->animationFlag = false;
+	this->animationSwapCooldown = 0;
 }
 
 #pragma endregion
@@ -92,12 +93,22 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 			this->y = startPosY;
 		}
 	}
+
+	if (this->animationSwapCooldown <= 0)
+	{
+		animationFlag = !animationFlag;
+		this->animationSwapCooldown = PLAYER_ANIMATION_COOLDOWN;
+	}
+	else
+	{
+		this->animationSwapCooldown -= previousFrameTime;
+	}
 }
 
 void Player::Draw()
 { 
-	if(this->verticalVelocity || this->horizontalVelocity)
-		this->onDirectionChange();
+	this->updateSpriteSheetOffsets();
+
 	const Game* game = Game::GetInstance();
 	const SDL_Rect& camera = game->GetCamera();
 
@@ -207,72 +218,97 @@ void Player::SetHp(int hp)
 
 #pragma region Private Methods
 
-void Player::onDirectionChange()
+void Player::updateSpriteSheetOffsets()
 {
-	switch (this->facing)
+	if (this->verticalVelocity || this->horizontalVelocity)
 	{
-	case Direction::UP:
-		if (animationFlag)
+		//is moving so show the appropriate section of the sprite sheet
+		switch (this->facing)
 		{
-			this->spriteSheetOffsetX = 0;
-			this->spriteSheetOffsetY = PLAYER_HEIGHT;
-			animationFlag = false; // grab other sprite next time
-		}
-		else
-		{
-			this->spriteSheetOffsetX = PLAYER_WIDTH;
-			this->spriteSheetOffsetY = PLAYER_HEIGHT;
-			animationFlag = true; // false is grabbed first. then it will grab true next time
-		}
-		break;
-	case Direction::DOWN:
-		if(animationFlag)
-		{
-			this->spriteSheetOffsetX = 0;
-			this->spriteSheetOffsetY = 0;
-			animationFlag = false;
-		}
-		else
-		{
-			this->spriteSheetOffsetX = PLAYER_WIDTH;
-			this->spriteSheetOffsetY = 0;
-			animationFlag = true;
-		}
-		break;
-	case Direction::LEFT:
-		if (animationFlag)
-		{
-			this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
-			this->spriteSheetOffsetY = 0;
-			animationFlag = false;
-		}
-		else
-		{
-			this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
-			this->spriteSheetOffsetY = PLAYER_HEIGHT;
-			animationFlag = true;
-		}
-		break;
-	case Direction::RIGHT:
-		if (animationFlag)
-		{
-			this->spriteSheetOffsetX = PLAYER_WIDTH;
-			this->spriteSheetOffsetY = PLAYER_HEIGHT * 2;
-			animationFlag = false;
-		}
-		else
-		{
-			this->spriteSheetOffsetX = 0;
-			this->spriteSheetOffsetY = PLAYER_HEIGHT * 2;
-			animationFlag = true;
-		}
-		break;
+		case Direction::UP:
+			if (animationFlag)
+			{
+				this->spriteSheetOffsetX = 0;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT;
+			}
+			else
+			{
+				this->spriteSheetOffsetX = PLAYER_WIDTH;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT;
+			}
+			break;
+		case Direction::DOWN:
+			if (animationFlag)
+			{
+				this->spriteSheetOffsetX = 0;
+				this->spriteSheetOffsetY = 0;
+			}
+			else
+			{
+				this->spriteSheetOffsetX = PLAYER_WIDTH;
+				this->spriteSheetOffsetY = 0;
+			}
+			break;
+		case Direction::LEFT:
+			if (animationFlag)
+			{
+				this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
+				this->spriteSheetOffsetY = 0;
+			}
+			else
+			{
+				this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT;
+			}
+			break;
+		case Direction::RIGHT:
+			if (animationFlag)
+			{
+				this->spriteSheetOffsetX = PLAYER_WIDTH;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT * 2;
+			}
+			else
+			{
+				this->spriteSheetOffsetX = 0;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT * 2;
+			}
+			break;
 
-	default:
+		default:
 #if _DEBUG
-		assert(false);	//wtf direction is this?
+	assert(false);	//wtf direction is this?
 #endif
-		break;
+			break;
+		}
+	}
+	else
+	{
+		//is not moving, so show the idle section of the sprite sheet
+		switch (this->facing)
+		{
+		case Direction::UP:
+				this->spriteSheetOffsetX = 0;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT * 3;
+			break;
+		case Direction::DOWN:
+				this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT * 2;
+			break;
+		case Direction::LEFT:
+				this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT * 3;
+			break;
+		case Direction::RIGHT:
+				this->spriteSheetOffsetX = PLAYER_WIDTH;
+				this->spriteSheetOffsetY = PLAYER_HEIGHT * 3;
+			break;
+
+		default:
+#if _DEBUG
+	assert(false);	//wtf direction is this?
+#endif
+			break;
+		}
 	}
 }
 

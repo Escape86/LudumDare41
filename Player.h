@@ -21,7 +21,7 @@ public:
 	void SetHp(int hp);
 
 private:
-	void onDirectionChange();
+	void updateSpriteSheetOffsets();
 
 	int horizontalVelocity;
 	int verticalVelocity;
@@ -30,4 +30,6 @@ private:
 
 	bool keydownPrimed;
 	bool animationFlag;
+
+	int animationSwapCooldown;
 };
