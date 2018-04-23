@@ -10,7 +10,7 @@ struct SDL_Rect;
 class Player : public Object
 {
 public:
-	Player();
+	Player(double spawnX, double spawnY, Direction initialFacing);
 	~Player();
 
 	void InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime) override;

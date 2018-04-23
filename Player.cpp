@@ -13,7 +13,7 @@
 
 #pragma region Constructor
 
-Player::Player() : Object(PLAYER_WIDTH + 150, PLAYER_HEIGHT + 150, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_TEXTURE_PATH)
+Player::Player(double spawnX, double spawnY, Direction initialFacing) : Object(spawnX, spawnY, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_TEXTURE_PATH)
 {
 	this->horizontalVelocity = 0;
 	this->verticalVelocity = 0;
@@ -34,6 +34,8 @@ Player::Player() : Object(PLAYER_WIDTH + 150, PLAYER_HEIGHT + 150, PLAYER_WIDTH,
 	this->attackDurationRemaining = 0.0f;
 	this->attackCooldownRemaining = 0.0f;
 	this->attackHitBox = nullptr;
+
+	this->facing = initialFacing;
 }
 
 #pragma endregion

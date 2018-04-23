@@ -26,11 +26,11 @@ Game::Game()
 	assert(Game::_instance == nullptr);	//already initialized!
 #endif	
 
-	this->player = new Player();
+	this->player = new Player(216.0, 144, Direction::DOWN);
 	this->previousFrameEndTime = 0;
 
-	//load western map initially
-	if (!this->SwitchMap("resources/western.csv", "resources/western.png", "resources/western_spawns.txt", "resources/western_teleporters.txt"))
+	//load house map initially
+	if (!this->SwitchMap("resources/house_interrior.csv", "resources/Interior.png", "resources/house_interrior_spawns.txt", "resources/house_interrior_teleporters.txt"))
 	{
 #if _DEBUG
 	assert(false);	//FAILED TO LOAD MAP!
@@ -562,6 +562,12 @@ void Game::cleanUpGameObjects()
 		delete spawn;
 	}
 	this->spawns.clear();
+
+	for (Enemy* enemy : this->enemies)
+	{
+		delete enemy;
+	}
+	this->enemies.clear();
 
 	if (this->map)
 	{
