@@ -29,4 +29,5 @@ private:
 	int hp;
 
 	bool keydownPrimed;
+	bool animationFlag;
 };

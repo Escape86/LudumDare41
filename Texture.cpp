@@ -17,6 +17,8 @@ Texture::Texture(const std::string path)
 	this->path = path;
 	this->isLoaded = false;
 	this->isForText = false;
+	this->renderOffsetX = this->width;
+	this->renderOffsetY = this->height;
 }
 
 Texture::Texture()
@@ -126,8 +128,8 @@ void Texture::Draw(int x, int y, bool shiftToCenter, SDL_Rect* clip /*= nullptr*
 #endif
 
 	//Set rendering space and render to screen
-	int renderX = this->isForText ? x : shiftToCenter ? x - (this->width / 2) : x;
-	int renderY = this->isForText ? y : shiftToCenter ? y - (this->height / 2) : y;
+	int renderX = this->isForText ? x : shiftToCenter ? x - this->renderOffsetX : x;
+	int renderY = this->isForText ? y : shiftToCenter ? y - this->renderOffsetY : y;
 	SDL_Rect renderQuad = { renderX, renderY, this->width, this->height };
 
 	//Set clip rendering dimensions
@@ -139,6 +141,12 @@ void Texture::Draw(int x, int y, bool shiftToCenter, SDL_Rect* clip /*= nullptr*
 
 	//Render to screen
 	SDL_RenderCopyEx(Display::GetRenderer(), this->sdl_texture, clip, &renderQuad, angle, center, flip);
+}
+
+void Texture::SetRenderOffset(int offsetX, int offsetY)
+{
+	this->renderOffsetX = offsetX;
+	this->renderOffsetY = offsetY;
 }
 
 int Texture::GetWidth()

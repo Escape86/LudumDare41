@@ -114,6 +114,9 @@ bool Display::ShutDown()
 	return true;
 }
 
+int Display::yoloX;
+int Display::yoloY;
+
 void Display::InjectFrame()
 {
 	//Handle events on queue
@@ -130,7 +133,7 @@ void Display::InjectFrame()
 	//Clear screen
 	SDL_SetRenderDrawColor(Display::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(Display::renderer);
-
+	
 	//draw our queued up textures
 	for (std::vector<QueuedTexture>::iterator it = Display::textureQueue.begin(); it != Display::textureQueue.end(); ++it)
 	{
@@ -186,6 +189,10 @@ void Display::InjectFrame()
 
 		delete t;
 	}
+
+	SDL_Rect chatBox = { yoloX - 12, yoloY - 12, 24, 24 };
+	SDL_SetRenderDrawColor(Display::GetRenderer(), 0x00, 0x00, 0xFF, 0xFF);
+	SDL_RenderFillRect(Display::GetRenderer(), &chatBox);
 
 	//Update screen
 	SDL_RenderPresent(Display::renderer);

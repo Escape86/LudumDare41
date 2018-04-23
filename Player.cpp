@@ -25,6 +25,9 @@ Player::Player() : Object(PLAYER_WIDTH + 150, PLAYER_HEIGHT + 150, PLAYER_WIDTH,
 
 	//prevent level switching from causing keyups to occur without a corresponding keydown
 	this->keydownPrimed = false;
+
+	// animation switch bool
+	animationFlag = false;
 }
 
 #pragma endregion
@@ -93,10 +96,14 @@ void Player::InjectFrame(unsigned int elapsedGameTime, unsigned int previousFram
 
 void Player::Draw()
 { 
+	if(this->verticalVelocity || this->horizontalVelocity)
+		this->onDirectionChange();
 	const Game* game = Game::GetInstance();
 	const SDL_Rect& camera = game->GetCamera();
 
 	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, this->width, this->height, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
+	Display::yoloX = this->x - camera.x;
+	Display::yoloY = this->y - camera.y;
 }
 
 void Player::OnKeyDown(int key)
@@ -125,7 +132,7 @@ void Player::OnKeyDown(int key)
 			break;
 	}
 
-	this->onDirectionChange();
+	//this->onDirectionChange();
 
 	//enforce velocity min/max values
 	if (this->verticalVelocity > PLAYER_VELOCITY)
@@ -207,20 +214,60 @@ void Player::onDirectionChange()
 	switch (this->facing)
 	{
 	case Direction::UP:
-		this->spriteSheetOffsetX = PLAYER_WIDTH;
-		this->spriteSheetOffsetY = 0;
+		if (animationFlag)
+		{
+			this->spriteSheetOffsetX = 0;
+			this->spriteSheetOffsetY = PLAYER_HEIGHT;
+			animationFlag = false; // grab other sprite next time
+		}
+		else
+		{
+			this->spriteSheetOffsetX = PLAYER_WIDTH;
+			this->spriteSheetOffsetY = PLAYER_HEIGHT;
+			animationFlag = true; // false is grabbed first. then it will grab true next time
+		}
 		break;
 	case Direction::DOWN:
-		this->spriteSheetOffsetX = 0;
-		this->spriteSheetOffsetY = 0;
+		if(animationFlag)
+		{
+			this->spriteSheetOffsetX = 0;
+			this->spriteSheetOffsetY = 0;
+			animationFlag = false;
+		}
+		else
+		{
+			this->spriteSheetOffsetX = PLAYER_WIDTH;
+			this->spriteSheetOffsetY = 0;
+			animationFlag = true;
+		}
 		break;
 	case Direction::LEFT:
-		this->spriteSheetOffsetX = PLAYER_WIDTH;
-		this->spriteSheetOffsetY = PLAYER_HEIGHT;
+		if (animationFlag)
+		{
+			this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
+			this->spriteSheetOffsetY = 0;
+			animationFlag = false;
+		}
+		else
+		{
+			this->spriteSheetOffsetX = PLAYER_WIDTH * 2;
+			this->spriteSheetOffsetY = PLAYER_HEIGHT;
+			animationFlag = true;
+		}
 		break;
 	case Direction::RIGHT:
-		this->spriteSheetOffsetX = 0;
-		this->spriteSheetOffsetY = PLAYER_HEIGHT;
+		if (animationFlag)
+		{
+			this->spriteSheetOffsetX = PLAYER_WIDTH;
+			this->spriteSheetOffsetY = PLAYER_HEIGHT * 2;
+			animationFlag = false;
+		}
+		else
+		{
+			this->spriteSheetOffsetX = 0;
+			this->spriteSheetOffsetY = PLAYER_HEIGHT * 2;
+			animationFlag = true;
+		}
 		break;
 
 	default:

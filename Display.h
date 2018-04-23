@@ -53,6 +53,9 @@ public:
 	static bool SetTextIsVisible(int id, bool isVisible);
 	static bool RemoveText(int id);
 
+	static int yoloX;
+	static int yoloY;
+
 private:
 	static bool loadFonts();
 

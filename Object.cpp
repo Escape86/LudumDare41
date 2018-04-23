@@ -20,6 +20,9 @@ Object::Object(double spawnX, double spawnY, int width, int height, std::string 
 	this->y = spawnY;
 
 	this->SetTexture(texturePath);
+
+	// fix the rendering space
+	this->texture->SetRenderOffset(this->width / 2, this->height / 2);
 }
 
 #pragma endregion
