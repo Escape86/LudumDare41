@@ -9,6 +9,7 @@
 #include "Enemy.h"
 #include "Trigger.h"
 #include "MapTile.h"
+#include "Texture.h"
 #include <fstream>
 #include <algorithm>
 #include <time.h>
@@ -57,6 +58,9 @@ Game::Game()
 
 	this->talkingToRed = false;
 	this->doneTalkingToRed = false;
+
+	this->heart = new Texture(HEART_TEXTURE_PATH);
+	this->heart->Load();
 
 	Game::_instance = this;
 
@@ -346,6 +350,9 @@ void Game::InjectFrame()
 		//draw player
 		this->player->Draw();
 	}
+
+	//draw hearts ui
+	this->drawHeartsUI();
 
 	this->previousFrameEndTime = elapsedTimeInMilliseconds;
 }
@@ -939,6 +946,22 @@ void Game::teleportToBull()
 	this->teleporters.push_back(new Teleporter(this->player->GetPositionX() - 5, this->player->GetPositionY() - 5, TILE_WIDTH, TILE_HEIGHT, "resources/western.csv", "resources/western.png", "resources/western_spawns.txt", "resources/western_teleporters.txt", 1075.0, 1225.0));
 
 	this->clearBull = true;
+}
+
+void Game::drawHeartsUI()
+{
+	int playerHP = this->player->GetHp();
+
+	int h1Offset = playerHP >= 2 ? 2 : playerHP == 1 ? 1 : 0;
+	int h2Offset = playerHP >= 4 ? 2 : playerHP == 3 ? 1 : 0;
+	int h3Offset = playerHP >= 6 ? 2 : playerHP == 5 ? 1 : 0;
+
+	//1
+	Display::QueueTextureForRendering(this->heart, 5, 5, 20, 20, false, true, h1Offset * 20, 0);
+	//2
+	Display::QueueTextureForRendering(this->heart, 25, 5, 20, 20, false, true, h2Offset * 20, 0);
+	//3
+	Display::QueueTextureForRendering(this->heart, 45, 5, 20, 20, false, true, h3Offset * 20, 0);
 }
 
 #pragma endregion

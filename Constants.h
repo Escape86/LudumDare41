@@ -2,6 +2,7 @@
 
 #pragma region Filepaths
 #define PLAYER_TEXTURE_PATH				"resources/player.png"
+#define HEART_TEXTURE_PATH				"resources/Hearts.png"
 #define FONT_FILEPATH					"resources/Fonts/Orbitron/Orbitron-Regular.ttf"
 #define ENEMY_WAS_ATTACKED_WAVE_FILEPATH "resources/Audio/EnemyWasHit.wav"
 #define PLAYER_WAS_ATTACKED_WAVE_FILEPATH "resources/Audio/PlayerWasHit.wav"

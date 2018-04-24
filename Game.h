@@ -11,6 +11,7 @@ class Spawn;
 class Teleporter;
 class Enemy;
 class Trigger;
+class Texture;
 #pragma endregion
 
 class Game
@@ -46,6 +47,10 @@ private:
 
 	void talkedToWomenInRedDress();
 	void teleportToBull();
+
+	void drawHeartsUI();
+
+	Texture* heart;
 
 	Player* player;
 	Map* map;
