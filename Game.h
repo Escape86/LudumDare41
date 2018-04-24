@@ -66,5 +66,7 @@ private:
 	bool isOnMoon;
 	bool isInFantasy;
 
+	int numberOfCowsRescued;
+
 	static Game* _instance;
 };

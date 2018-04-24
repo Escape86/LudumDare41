@@ -11,6 +11,8 @@ public:
 	void InjectFrame(unsigned int elapsedGameTime, unsigned int previousFrameTime) override;
 	void Draw() override;
 
+	int GetID();
+
 private:
 	const int id;
 

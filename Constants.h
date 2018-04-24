@@ -47,6 +47,8 @@
 
 #define ATTACK_RECOIL_AMOUNT			45
 
+#define TOTAL_COWS_TO_RESCUE			3
+
 #define CHAT_POS_1						SCREEN_HEIGHT * .41 + 5
 #define CHAT_POS_2						SCREEN_HEIGHT * .45 + 4
 

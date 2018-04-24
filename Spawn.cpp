@@ -155,4 +155,9 @@ void Spawn::Draw()
 	Display::QueueTextureForRendering(this->texture, this->x - camera.x, this->y - camera.y, this->width, this->height, true, true, this->spriteSheetOffsetX, this->spriteSheetOffsetY);
 }
 
+int Spawn::GetID()
+{
+	return this->id;
+}
+
 #pragma endregion

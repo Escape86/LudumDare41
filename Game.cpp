@@ -47,6 +47,8 @@ Game::Game()
 
 	this->camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
+	this->numberOfCowsRescued = 0;
+
 	Game::_instance = this;
 
 	srand(time(NULL));	//seed our random number generation
@@ -92,6 +94,13 @@ void Game::InjectFrame()
 
 	const unsigned int previousFrameTime = elapsedTimeInMilliseconds - this->previousFrameEndTime;
 
+	//win condition
+	if (this->numberOfCowsRescued >= TOTAL_COWS_TO_RESCUE)
+	{
+		doChatEvent("YOU SAVED ALL THE COWS!", "THANKS FOR PLAYING!");
+		this->numberOfCowsRescued = -999999;
+	}
+
 	if (this->player)
 	{
 		//check hp to see if player died
@@ -128,9 +137,42 @@ void Game::InjectFrame()
 		}
 	}
 
-	for (Spawn* spawn : this->spawns)
+	for (std::vector<Spawn*>::iterator it = this->spawns.begin(); it != this->spawns.end();)
 	{
+		Spawn* spawn = *it;
 		spawn->InjectFrame(elapsedTimeInMilliseconds, previousFrameTime);
+
+		//is cow?
+		if (this->isInFantasy)
+		{
+			if (spawn->GetID() == 6 || spawn->GetID() == 7)
+			{
+				if (this->player->TestCollision(spawn))
+				{
+					//collected cow!
+					delete spawn;
+					it = this->spawns.erase(it);
+					this->numberOfCowsRescued++;
+					continue;
+				}
+			}
+		}
+		else if(this->isOnMoon)
+		{
+			if (spawn->GetID() == 15)
+			{
+				if (this->player->TestCollision(spawn))
+				{
+					//collected cow!
+					delete spawn;
+					it = this->spawns.erase(it);
+					this->numberOfCowsRescued++;
+					continue;
+				}
+			}
+		}
+
+		++it;
 	}
 
 	const SDL_Rect* playerAttackHitBox = this->player->GetPlayerAttackHitBox();
