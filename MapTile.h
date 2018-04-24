@@ -26,6 +26,8 @@ public:
 
 	bool GetIsWalkable() const;
 
+	static int GetMapIdByFileName(std::string filename);
+
 private:
 	int mapUniqueId;
 	const int id;

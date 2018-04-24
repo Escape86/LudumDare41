@@ -397,4 +397,9 @@ bool MapTile::GetIsWalkable() const
 	return this->walkable;
 }
 
+int MapTile::GetMapIdByFileName(std::string filename)
+{
+	return mapFileNameToMapUniqueIDLookup[filename];
+}
+
 #pragma endregion

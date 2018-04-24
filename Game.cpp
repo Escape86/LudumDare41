@@ -7,6 +7,8 @@
 #include "Spawn.h"
 #include "Teleporter.h"
 #include "Enemy.h"
+#include "Trigger.h"
+#include "MapTile.h"
 #include <fstream>
 #include <algorithm>
 #include <time.h>
@@ -28,6 +30,11 @@ Game::Game()
 
 	this->player = new Player(216.0, 144, Direction::DOWN);
 	this->previousFrameEndTime = 0;
+
+	this->initTriggers();
+
+	this->isOnMoon = false;;
+	this->isInFantasy = false;
 
 	//load house map initially
 	if (!this->SwitchMap("resources/house_interrior.csv", "resources/Interior.png", "resources/house_interrior_spawns.txt", "resources/house_interrior_teleporters.txt"))
@@ -92,7 +99,18 @@ void Game::InjectFrame()
 		if (hp <= 0)
 		{
 			//player died! send them back to moon spawn
-			this->player->SetPosition(96, 1344);
+			if (this->isOnMoon)
+			{
+				this->player->SetPosition(96, 888);
+			}
+			else
+			{
+#if _DEBUG
+	assert(this->isInFantasy);
+#endif
+				this->player->SetPosition(96, 1344);
+			}
+
 			this->player->SetHp(PLAYER_MAX_HP);
 		}
 
@@ -181,6 +199,12 @@ void Game::InjectFrame()
 		camera.y = mapHeight - (camera.h / 2) - (TILE_HEIGHT / 2);
 	}
 
+	//check triggers
+	for (Trigger* trigger : this->currentMapsTriggers)
+	{
+		trigger->TestAndFireAction(this->player);
+	}
+
 	//now that updates are done, draw the frame
 	if (this->map)
 	{
@@ -238,15 +262,9 @@ void Game::InjectKeyDown(int key)
 			{
 				if (spawn->TestCollision(this->player))
 				{
-					//yes, do handle the interaction!
-					this->chatTextIds[0] = Display::CreateText("hi there", 12, CHAT_POS_1, Display::TWENTY, true);
-					this->isInChatEvent = true;
+					//yes, do handle the interaction!			
+					this->doChatEvent("hi there");
 
-					//fake all keys being released
-					this->player->OnKeyUp(SDLK_UP);
-					this->player->OnKeyUp(SDLK_DOWN);
-					this->player->OnKeyUp(SDLK_LEFT);
-					this->player->OnKeyUp(SDLK_RIGHT);
 					break;
 				}
 			}
@@ -527,6 +545,20 @@ bool Game::SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, st
 	if (!loadTeleportersResult)
 		return false;
 
+	this->currentMapsTriggers = this->mapIdToMapTriggers[MapTile::GetMapIdByFileName(mapFilePath)];
+
+	this->isOnMoon = false;
+	this->isInFantasy = false;
+
+	if (mapFilePath == "resources/moon.csv")
+	{
+		this->isOnMoon = true;
+	}
+	else if (mapFilePath == "resources/fantasy.csv")
+	{
+		this->isInFantasy = true;
+	}
+
 	return true;
 }
 
@@ -574,6 +606,70 @@ void Game::cleanUpGameObjects()
 		delete this->map;
 		this->map = nullptr;
 	}
+}
+#include<iostream>
+void Game::initTriggers()
+{
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/western.csv")] =
+	{
+		new Trigger(15 * TILE_WIDTH, 14 * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, true, [this]()
+		{
+			this->doChatEvent("Trebek: I better go check the", "corral.");
+		}),
+
+		new Trigger(19 * TILE_WIDTH, 28 * TILE_HEIGHT, 12* TILE_WIDTH, TILE_HEIGHT, true, [this]()
+		{
+			this->doChatEvent("Festus: Trebek! Its awful!");
+		})
+	};
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/bank.csv")] =
+	{
+
+	};
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/cathouse.csv")] =
+	{
+
+	};
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/saloon.csv")] =
+	{
+
+	};
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/house_interrior.csv")] =
+	{
+
+	};
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/moon.csv")] =
+	{
+
+	};
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/pisser.csv")] =
+	{
+
+	};
+	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/fantasy.csv")] =
+	{
+
+	};
+}
+
+void Game::doChatEvent(std::string text1, std::string text2 /*=""*/)
+{
+	if (text1.length())
+	{
+		this->chatTextIds[0] = Display::CreateText(text1, 12, CHAT_POS_1, Display::TWENTY, true);
+	}
+	if (text2.length())
+	{
+		this->chatTextIds[1] = Display::CreateText(text2, 12, CHAT_POS_2, Display::TWENTY, true);
+	}
+
+	this->isInChatEvent = true;
+
+	//fake all keys being released
+	this->player->OnKeyUp(SDLK_UP);
+	this->player->OnKeyUp(SDLK_DOWN);
+	this->player->OnKeyUp(SDLK_LEFT);
+	this->player->OnKeyUp(SDLK_RIGHT);
 }
 
 #pragma endregion

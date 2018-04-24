@@ -19,6 +19,7 @@ enum Direction
 class Object
 {
 	friend class Teleporter;
+	friend class Trigger;
 
 public:
 	Object(double spawnX, double spawnY, int width, int height, std::string texturePath);

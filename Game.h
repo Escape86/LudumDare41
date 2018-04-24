@@ -2,6 +2,7 @@
 #include "Teleporter.h"
 #include "SDL_rect.h"
 #include <vector>
+#include <map>
 
 #pragma region Forward Declarations
 class Player;
@@ -9,6 +10,7 @@ class Map;
 class Spawn;
 class Teleporter;
 class Enemy;
+class Trigger;
 #pragma endregion
 
 class Game
@@ -37,6 +39,8 @@ public:
 
 private:
 	void cleanUpGameObjects();
+	void initTriggers();
+	void doChatEvent(std::string text1, std::string text2 = "");
 
 	Player* player;
 	Map* map;
@@ -44,6 +48,8 @@ private:
 	std::vector<Spawn*> spawns;
 	std::vector<Enemy*> enemies;
 	std::vector<Teleporter*> teleporters;
+	std::map<int, std::vector<Trigger*>> mapIdToMapTriggers;
+	std::vector<Trigger*> currentMapsTriggers;
 
 	bool isInChatEvent;
 	int chatTextIds[2] = { -1, -1 };
@@ -52,6 +58,9 @@ private:
 	bool mapSwitchRequested;
 
 	unsigned int previousFrameEndTime;
+
+	bool isOnMoon;
+	bool isInFantasy;
 
 	static Game* _instance;
 };
