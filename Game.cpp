@@ -248,12 +248,29 @@ void Game::InjectKeyDown(int key)
 		//are we currently chatting?
 		if (this->isInChatEvent)
 		{
+			//fake all keys being released
+			this->player->OnKeyUp(SDLK_UP);
+			this->player->OnKeyUp(SDLK_DOWN);
+			this->player->OnKeyUp(SDLK_LEFT);
+			this->player->OnKeyUp(SDLK_RIGHT);
+
 			//advance chat or clear chat event if we're done chatting
-			for (int i = 0; i < 2; i++)
+
+			//check if queued text
+			if (this->queuedTextForChatEvents.size())
 			{
-				Display::RemoveText(this->chatTextIds[i]);	//ignore return bool it just means if it found the requested text or not
+				this->doChatEvent(this->queuedTextForChatEvents[0]);
+				this->queuedTextForChatEvents.erase(this->queuedTextForChatEvents.begin(), this->queuedTextForChatEvents.begin() + 1);
 			}
-			this->isInChatEvent = false;
+			else
+			{
+				//clear and leave chat event
+				for (int i = 0; i < 2; i++)
+				{
+					Display::RemoveText(this->chatTextIds[i]);	//ignore return bool it just means if it found the requested text or not
+				}
+				this->isInChatEvent = false;
+			}
 		}
 		else
 		{
@@ -562,6 +579,11 @@ bool Game::SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, st
 	return true;
 }
 
+bool Game::GetIsInChatEvent() const
+{
+	return this->isInChatEvent;
+}
+
 const Player* Game::GetPlayer() const
 {
 	return this->player;
@@ -620,6 +642,9 @@ void Game::initTriggers()
 		new Trigger(19 * TILE_WIDTH, 28 * TILE_HEIGHT, 12* TILE_WIDTH, TILE_HEIGHT, true, [this]()
 		{
 			this->doChatEvent("Festus: Trebek! Its awful!");
+
+			//this->queuedTextForChatEvents.push_back("your mom");
+			//this->queuedTextForChatEvents.push_back("your dad");
 		})
 	};
 	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/bank.csv")] =
@@ -654,6 +679,12 @@ void Game::initTriggers()
 
 void Game::doChatEvent(std::string text1, std::string text2 /*=""*/)
 {
+	//clear any chat
+	for (int i = 0; i < 2; i++)
+	{
+		Display::RemoveText(this->chatTextIds[i]);	//ignore return bool it just means if it found the requested text or not
+	}
+
 	if (text1.length())
 	{
 		this->chatTextIds[0] = Display::CreateText(text1, 12, CHAT_POS_1, Display::TWENTY, true);

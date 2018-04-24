@@ -32,6 +32,8 @@ public:
 
 	bool SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, std::string spawnsFilePath, std::string teleportersFilePath);
 
+	bool GetIsInChatEvent() const;
+
 	const Player* GetPlayer() const;
 
 	const Map* GetMap() const;
@@ -56,6 +58,8 @@ private:
 
 	Destination destinationMapSwitch;
 	bool mapSwitchRequested;
+
+	std::vector<std::string> queuedTextForChatEvents;
 
 	unsigned int previousFrameEndTime;
 

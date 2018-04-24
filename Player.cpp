@@ -193,7 +193,10 @@ void Player::OnKeyDown(int key)
 			break;
 		case 32:
 			//attack
-			this->attack();
+			if (!Game::GetInstance()->GetIsInChatEvent())
+			{
+				this->attack();
+			}
 			break;
 	}
 
