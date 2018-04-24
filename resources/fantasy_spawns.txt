@@ -1,0 +1,21 @@
+--------------------------------------------------------------------------------------------------------------------
+-- ID, XPos, YPos, Width, Height, TexturePath, TextureOffsetX, TextureOffsetY,  ShouldIdleMove, IsEnemy	--
+--------------------------------------------------------------------------------------------------------------------
+-- Red Alien A -- ALL MOVING
+0, 336.0, 888.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien B -- ALL MOVING
+1, 240.0, 408.0, 64, 64, resources/Alien_Purple_Sprite.png, 0, 0, true, true
+-- Red Alien C -- ALL MOVING
+2, 432.0, 408.0, 64, 64, resources/Alien_Green_Sprite.png, 0, 0, true, true
+-- Red Alien D -- ALL MOVING
+3, 216.0, 240.0, 64, 64, resources/Alien_Red_Sprite.png, 0, 0, true, true
+-- Red Alien E -- ALL MOVING
+4, 456.0, 264.0, 64, 64, resources/Alien_Green_Sprite.png, 0, 0, true, true
+-- Red Alien F -- ALL MOVING
+5, 336.0, 144.0, 64, 64, resources/Alien_Purple_Sprite.png, 0, 0, true, true
+
+----- Specials at End of Level
+-- Cow A
+6, 216.0, 72.0, 45, 45, resources/Animals_Sprite.png, 0, 0, false, false
+-- Cow B
+7, 480.0, 72.0, 45, 45, resources/Animals_Sprite.png, 0, 0, false, false

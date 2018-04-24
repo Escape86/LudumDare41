@@ -2,8 +2,5 @@
 -- XPos, YPos, DestinationMapFilePath, DestinationMapTextureFilePath, DestinationSpawnsFilePath, DestinationTeleportersFilePath, DestinationX, DestinationY	--
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---send back to saloon
-264, 175, resources/saloon.csv, resources/Interior.png, resources/saloon_spawns.txt, resources/saloon_teleporters.txt, 288, 110));
-
---send to castle
-168, 115, resources/fantasy.csv, resources/Fantasy.png, resources/fantasy_spawns.txt, resources/fantasy_teleporters.txt, 96, 888));
+--western infront of the cat house
+336, 92, resources/western.csv, resources/western.png, resources/western_spawns.txt, resources/western_teleporters.txt, 552, 1152));

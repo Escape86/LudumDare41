@@ -99,14 +99,14 @@ void Game::InjectFrame()
 		if (hp <= 0)
 		{
 			//player died! send them back to moon spawn
-			if (this->isOnMoon)
+			if (this->isInFantasy)
 			{
 				this->player->SetPosition(96, 888);
 			}
 			else
 			{
 #if _DEBUG
-	assert(this->isInFantasy);
+	assert(this->isOnMoon);
 #endif
 				this->player->SetPosition(96, 1344);
 			}
