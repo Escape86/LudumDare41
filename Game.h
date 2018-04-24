@@ -44,6 +44,9 @@ private:
 	void initTriggers();
 	void doChatEvent(std::string text1, std::string text2 = "");
 
+	void talkedToWomenInRedDress();
+	void teleportToBull();
+
 	Player* player;
 	Map* map;
 	SDL_Rect camera;
@@ -65,8 +68,17 @@ private:
 
 	bool isOnMoon;
 	bool isInFantasy;
+	bool isInWestern;
+	bool isInSaloon;
+	bool isInCatHouse;
+
+	bool talkingToRed;
+	bool doneTalkingToRed;
 
 	int numberOfCowsRescued;
+
+	float bullTimer;
+	bool clearBull;
 
 	static Game* _instance;
 };

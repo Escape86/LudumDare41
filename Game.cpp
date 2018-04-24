@@ -35,6 +35,12 @@ Game::Game()
 
 	this->isOnMoon = false;;
 	this->isInFantasy = false;
+	this->isInWestern = false;
+	this->isInSaloon = false;
+	this->isInCatHouse = false;
+
+	this->bullTimer = 7.0f;
+	this->clearBull = false;
 
 	//load house map initially
 	if (!this->SwitchMap("resources/house_interrior.csv", "resources/Interior.png", "resources/house_interrior_spawns.txt", "resources/house_interrior_teleporters.txt"))
@@ -48,6 +54,9 @@ Game::Game()
 	this->camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	this->numberOfCowsRescued = 0;
+
+	this->talkingToRed = false;
+	this->doneTalkingToRed = false;
 
 	Game::_instance = this;
 
@@ -99,6 +108,15 @@ void Game::InjectFrame()
 	{
 		doChatEvent("YOU SAVED ALL THE COWS!", "THANKS FOR PLAYING!");
 		this->numberOfCowsRescued = -999999;
+	}
+
+	if (this->talkingToRed)
+	{
+		if (this->doneTalkingToRed)
+		{
+			this->teleportToBull();
+			this->talkingToRed = false;
+		}
 	}
 
 	if (this->player)
@@ -171,6 +189,20 @@ void Game::InjectFrame()
 				}
 			}
 		}
+		else if (this->isInWestern)
+		{
+			//is bull?
+			if (spawn->GetID() == 0)
+			{
+				if (this->player->TestCollision(spawn))
+				{
+					double x = this->player->GetPositionX();
+					double y = this->player->GetPositionY();
+					this->player->SetPosition(x - 10, y - 10);
+				}
+			}
+		}
+		
 
 		++it;
 	}
@@ -239,6 +271,52 @@ void Game::InjectFrame()
 	else if ((camera.y + (camera.h / 2)) > (mapHeight - (TILE_HEIGHT / 2)))
 	{
 		camera.y = mapHeight - (camera.h / 2) - (TILE_HEIGHT / 2);
+	}
+
+	if (this->isInWestern && this->clearBull)
+	{
+		float frameTimeInMilliseconds = previousFrameTime / 1000.0f;
+
+		if (this->bullTimer <= 0.0f)
+		{
+			//remove bull
+			for (std::vector<Spawn*>::iterator it = this->spawns.begin(); it != this->spawns.end();)
+			{
+				Spawn* spawn = *it;
+
+				if (spawn->GetID() == 0)
+				{
+					delete spawn;
+					it = this->spawns.erase(it);
+					break;
+				}
+				else
+				{
+					++it;
+				}
+			}
+
+			//turn off flag for event
+			this->clearBull = false;
+		}
+		else
+		{
+			//move bull out of the way
+			for (std::vector<Spawn*>::iterator it = this->spawns.begin(); it != this->spawns.end();)
+			{
+				Spawn* spawn = *it;
+
+				if (spawn->GetID() == 0)
+				{
+					double x = spawn->GetPositionX();
+					double y = spawn->GetPositionY();
+					spawn->SetPosition(x - NPC_VELOCITY * frameTimeInMilliseconds, y);
+					break;
+				}
+			}
+
+			this->bullTimer -= frameTimeInMilliseconds;
+		}
 	}
 
 	//check triggers
@@ -310,6 +388,11 @@ void Game::InjectKeyDown(int key)
 				for (int i = 0; i < 2; i++)
 				{
 					Display::RemoveText(this->chatTextIds[i]);	//ignore return bool it just means if it found the requested text or not
+
+					if (this->talkingToRed)
+					{
+						this->doneTalkingToRed = true;
+					}
 				}
 				this->isInChatEvent = false;
 			}
@@ -317,19 +400,35 @@ void Game::InjectKeyDown(int key)
 		else
 		{
 			//check if player is colliding with the spawn (may indicate an interaction request)
+			bool interaction = false;
 			for (Spawn* spawn : this->spawns)
 			{
 				if (spawn->TestCollision(this->player))
 				{
-					//yes, do handle the interaction!			
-					this->doChatEvent("hi there");
+					//yes, do handle the interaction!		
+					
+					//is it lady in red dress?
+					if (this->isInCatHouse && spawn->GetID() == 1)
+					{
+						//yes!
+						this->talkedToWomenInRedDress();
+					}
+					else
+					{
+						//nope just normal person
+						this->doChatEvent("hi there");
+					}
+					interaction = true;
 
 					break;
 				}
 			}
 
-			//nope, just send the message on to the player class and let them handle it (maybe it's combat attacks?)
-			this->player->OnKeyDown(key);
+			if (!interaction)
+			{
+				//nope, just send the message on to the player class and let them handle it (maybe it's combat attacks?)
+				this->player->OnKeyDown(key);
+			}
 		}
 	}
 }
@@ -608,6 +707,9 @@ bool Game::SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, st
 
 	this->isOnMoon = false;
 	this->isInFantasy = false;
+	this->isInWestern = false;
+	this->isInSaloon = false;
+	this->isInCatHouse = false;
 
 	if (mapFilePath == "resources/moon.csv")
 	{
@@ -616,6 +718,18 @@ bool Game::SwitchMap(std::string mapFilePath, std::string mapTextureFilePath, st
 	else if (mapFilePath == "resources/fantasy.csv")
 	{
 		this->isInFantasy = true;
+	}
+	else if (mapFilePath == "resources/western.csv")
+	{
+		this->isInWestern = true;
+	}
+	else if (mapFilePath == "resources/saloon.csv")
+	{
+		this->isInSaloon = true;
+	}
+	else if (mapFilePath == "resources/cathouse.csv")
+	{
+		this->isInCatHouse = true;
 	}
 
 	return true;
@@ -685,9 +799,10 @@ void Game::initTriggers()
 		{
 			this->doChatEvent("Festus: Trebek! Its awful!");
 
-			//this->queuedTextForChatEvents.push_back("your mom");
-			//this->queuedTextForChatEvents.push_back("your dad");
-		})
+			this->queuedTextForChatEvents.push_back("The sheriff is looking for you!");
+			this->queuedTextForChatEvents.push_back("Go to the saloon!");
+		}),
+
 	};
 	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/bank.csv")] =
 	{
@@ -695,15 +810,80 @@ void Game::initTriggers()
 	};
 	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/cathouse.csv")] =
 	{
+		new Trigger(9 * TILE_WIDTH, 9 * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, true, [this]()
+		{
+			this->doChatEvent("Bertha: Well if it isn't");
 
+			this->queuedTextForChatEvents.push_back("the great hero Trebek! What");
+			this->queuedTextForChatEvents.push_back("brings you to our humble…");
+			this->queuedTextForChatEvents.push_back("uh, home ?");
+
+			this->queuedTextForChatEvents.push_back("Trebek : I don't have time for");
+			this->queuedTextForChatEvents.push_back("these pleasantries Bertha.");
+			this->queuedTextForChatEvents.push_back("My cows are in Jeopardy!");
+			this->queuedTextForChatEvents.push_back("No... the town is in Jeopardy.");
+			this->queuedTextForChatEvents.push_back("Aliens have been goin' round’");
+			this->queuedTextForChatEvents.push_back("stealing the towns' stuff!");
+
+			this->queuedTextForChatEvents.push_back("Bertha : *gasp* Not their STUFF!");
+			this->queuedTextForChatEvents.push_back("Well...I know you'll do us right");
+			this->queuedTextForChatEvents.push_back("Trebek, you always do.");
+			this->queuedTextForChatEvents.push_back("Have you met our new employee,");
+			this->queuedTextForChatEvents.push_back("by the way? The one in red.");
+
+			this->queuedTextForChatEvents.push_back("Trebek : BERTHA THAT'S IT!");
+			this->queuedTextForChatEvents.push_back("YOU'RE A GENIUS!");
+			this->queuedTextForChatEvents.push_back("THE WOMAN IN THE RED DRESS!");
+			this->queuedTextForChatEvents.push_back("THE BULL IS GOING TO LOVE HER!");
+
+			this->queuedTextForChatEvents.push_back("Bertha : Wha ? ? ? What are you.. ?");
+		}),
 	};
 	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/saloon.csv")] =
 	{
+		new Trigger(8 * TILE_WIDTH, 8 * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, true, [this]()
+		{
+			this->doChatEvent("Sheriff Cletus: TREBEK!");
 
+			this->queuedTextForChatEvents.push_back("Thank goodness!");
+			this->queuedTextForChatEvents.push_back("The town needs your help.");
+			this->queuedTextForChatEvents.push_back("There are all kinds of ");
+			this->queuedTextForChatEvents.push_back("science-tific portals in town!");
+			this->queuedTextForChatEvents.push_back("People say they've seen aliens,");
+			this->queuedTextForChatEvents.push_back("and their stuff is missing!");
+
+			this->queuedTextForChatEvents.push_back("Trebek: That's right sheriff..");
+			this->queuedTextForChatEvents.push_back("and they even got my cows.");
+			this->queuedTextForChatEvents.push_back("Well I'll set em' straight,");
+			this->queuedTextForChatEvents.push_back("I tell you what boy.");
+			this->queuedTextForChatEvents.push_back("The portals must be connected!");
+			this->queuedTextForChatEvents.push_back("Where can I find them?");
+
+			this->queuedTextForChatEvents.push_back("Sheriff Cletus: Well, one is");
+			this->queuedTextForChatEvents.push_back("being guarded by the ol' Bull.");
+			this->queuedTextForChatEvents.push_back("He won't take his attention off");
+			this->queuedTextForChatEvents.push_back("of it! You'll have to find ");
+			this->queuedTextForChatEvents.push_back("a way to distract him! ");
+			this->queuedTextForChatEvents.push_back("Another is right over there,");
+			this->queuedTextForChatEvents.push_back("in the pisser!");
+			this->queuedTextForChatEvents.push_back("So convenient!");
+			this->queuedTextForChatEvents.push_back("Seems to be a line though...");
+			this->queuedTextForChatEvents.push_back("Trebek: Thanks Sheriff.");
+		
+		}),
 	};
 	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/house_interrior.csv")] =
 	{
+		new Trigger(9 * TILE_WIDTH, 6 * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, true, [this]()
+		{
+			this->doChatEvent("Cow: Moo...Moo...");
 
+			this->queuedTextForChatEvents.push_back("Cow: MOO!!!");
+
+			this->queuedTextForChatEvents.push_back("Trebek: Zz..What in tarnation?!");
+			this->queuedTextForChatEvents.push_back("My cows! They need my help! ");
+			this->queuedTextForChatEvents.push_back("Sounds like they're in jeopardy!");
+		}),
 	};
 	this->mapIdToMapTriggers[MapTile::GetMapIdByFileName("resources/moon.csv")] =
 	{
@@ -743,6 +923,22 @@ void Game::doChatEvent(std::string text1, std::string text2 /*=""*/)
 	this->player->OnKeyUp(SDLK_DOWN);
 	this->player->OnKeyUp(SDLK_LEFT);
 	this->player->OnKeyUp(SDLK_RIGHT);
+}
+
+void Game::talkedToWomenInRedDress()
+{
+	this->doChatEvent("Trebek: Hey!", "You like Bulls, right ?!");
+	this->queuedTextForChatEvents.push_back("Follow me!");
+	this->queuedTextForChatEvents.push_back("Red: This is gonna be extra...");
+
+	this->talkingToRed = true;
+}
+
+void Game::teleportToBull()
+{
+	this->teleporters.push_back(new Teleporter(this->player->GetPositionX() - 5, this->player->GetPositionY() - 5, TILE_WIDTH, TILE_HEIGHT, "resources/western.csv", "resources/western.png", "resources/western_spawns.txt", "resources/western_teleporters.txt", 1075.0, 1225.0));
+
+	this->clearBull = true;
 }
 
 #pragma endregion
